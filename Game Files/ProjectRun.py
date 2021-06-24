@@ -129,9 +129,11 @@ def game_quit():
     pygame.quit()
     sys.exit()
 
+score = 0
 
 def game_loop():
     global pause
+    global score
     while True:
 
         # go through the events
@@ -171,7 +173,11 @@ def game_loop():
 
         # collision b/w coin sprite + player (3rd parameter is FALSE so we don't 'kill' the sprite)
         coins_hit = pygame.sprite.spritecollide(player, coins, False)
-
+        print('Coins hit: ',coins_hit)
+        print('Coins hit LENGTH: ', len(coins_hit))
+        score += len(coins_hit)
+        print('SCORE: ',score)
+        print('\n-------------------')
         # collision b/w platform sprite + player
         platforms_hit = pygame.sprite.spritecollide(player, platforms, False)
         player.hit(platforms_hit) # check to see if the player collides with a platform sprite (if so, then stop the player from falling due to acceleration)
@@ -194,8 +200,8 @@ def game_loop():
         if player.HP == 0:
             pygame.event.post(game_over)
 
-
         # update the display
+        gameFunctions.show_score(screen, "Score : " + str(score))
         pygame.display.update()
         FramePerSec.tick(FPS)
 

@@ -21,3 +21,8 @@ def button(screen, message, x, y, w, h, default_color, active_color, action=None
     textSurf, textRect = text_objects(message, button_text)
     textRect.center = ((x+(w/2)), (y+(h/2)))
     screen.blit(textSurf, textRect)
+
+def show_score(screen, message):
+    score_text = pygame.font.Font("freesansbold.ttf", 20)
+    textSurf, textRect = text_objects(message, score_text)
+    screen.blit(textSurf, textRect)
