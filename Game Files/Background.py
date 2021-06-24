@@ -4,7 +4,7 @@ class Background():
     """The background for our game."""
 
     def __init__(self):
-        self.image = pygame.image.load("Images/background_image.jpg").convert() # store image
+        self.image = pygame.image.load("background_image.jpg").convert() # store image
         self.rect = self.image.get_rect() # store a rectangle TODO: Resize the image to match the window size
 
         # 1st set of coordinates
