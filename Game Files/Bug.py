@@ -5,8 +5,8 @@ class Bug(pygame.sprite.Sprite):
     
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("Images/bug.png")
-        self.surface = pygame.Surface((40, 40))
+        self.image = pygame.image.load("bug.png")
+        self.surface = pygame.Surface((20, 40))
         self.image = pygame.transform.scale(self.image, (40, 40))
         self.rect = self.surface.get_rect(center = (600, 440))
         self.hasTouched = False
@@ -26,3 +26,10 @@ class Bug(pygame.sprite.Sprite):
     def draw(self, screen):
         """Draws the bug to the screen."""
         screen.blit(self.image, self.rect)
+
+    def collision(bugs_hit, player):
+        """A method that removes bug sprites when collision occurs b/w player and bug sprite."""
+
+        for bug in bugs_hit:
+            bug.kill() # remove the sprite
+            player.HP -= 1 # decrease HP of the player

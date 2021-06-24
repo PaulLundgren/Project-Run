@@ -3,16 +3,12 @@ import pygame
 class Currency(pygame.sprite.Sprite):
     """The currency of our game. The user can collect these objects to purchase items."""
     
-    def __init__(self, pos):
+    def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.image.load("Images/coin.png")
+        self.image = pygame.image.load("coin.png")
         self.surface = pygame.Surface((45, 45))
         self.image = pygame.transform.scale(self.image, (45, 45))
-
-        self.positions = (410, 350, 425, 200, 350) # predetermined locations for the coins to relocate to
-        self.rect = self.surface.get_rect(center = (600 - pos, self.positions[0]))
-        self.pos_index = 0 # index to use for our predetermined drawing locations for the coins
-        self.hasTouched = False # boolean that determines if the player sprite collides with a coin sprite
+        self.rect = self.surface.get_rect(center = (1000 + x, y))
         
     def update(self):
         """Updates the current position of the Player."""
@@ -21,19 +17,19 @@ class Currency(pygame.sprite.Sprite):
 
         # wraps the coin to the other side of the screen
         if (self.rect.left < -30):
-            self.hasTouched = False # allows for the coin to be drawn to the screen
-            self.rect.right = 640
-            self.rect.center = (640, self.positions[self.pos_index])
+            self.kill() # remove the coin when it goes off the screen
 
-            # increment through our predetermined locations for the coins to relocate to
-            if self.pos_index == 4:
-                self.pos_index = 0
-            else:
-                self.pos_index += 1
+            
 
     def draw(self, surface):
         """Draws the coin to the screen."""
 
-        # if the player has not collided with the coin, then draw the coin onto the screen
-        if not self.hasTouched:
+        if self.rect.left < 650:
             surface.blit(self.image, self.rect)
+
+    
+    def collision(coins_hit):
+        """A method that removes coin sprites when collision occurs b/w player and coin sprite."""
+
+        for coin in coins_hit:
+                coin.kill() # remove the sprite if a collision is detected

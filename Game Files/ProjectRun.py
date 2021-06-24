@@ -17,6 +17,7 @@ import gamePause
 
 
 
+
 # initialize pygame modules
 pygame.init()
 
@@ -40,6 +41,8 @@ bright_green = (0, 255, 0)
 # set the window caption for our game
 pygame.display.set_caption("Project Run")
 
+
+
 # group creation
 sprites = pygame.sprite.Group()
 coins = pygame.sprite.Group()
@@ -52,7 +55,6 @@ player = Player()
 floor = Floor()
 
 # add sprites to respective groups
-sprites.add(player)
 sprites.add(floor)
 
 # add floor to list of platform
@@ -62,58 +64,38 @@ platforms.add(floor)
 GAMEOVER = USEREVENT + 1
 game_over = pygame.event.Event(GAMEOVER)
 
-# create currency
-for i in range(5):
-    coin = Currency(i * 45)
-    sprites.add(coin)
-    coins.add(coin)
+# custom event that increases the speed of the images
+SPEED = USEREVENT + 2
+pygame.time.set_timer(SPEED, 30000) # every 30 seconds, increase the speed of the game
+
+
 
 # create our background
 background = Background()
 
-# generate platforms
-def plat_gen():
+
+def plat_gen(platforms, sprites, index):
     """Generate the platforms for the player to utilize."""
 
-    # dictates the number of platforms we can have at most (in this case, it would be 3, since the floor is considered a platform)
-    while len(platforms) < 4:
-        platform = Platform()
-       
+    # platforms empty; make platforms
+    if len(platforms) < 4:
 
-        while check_platforms(platform, platforms):
-            platform = Platform()
-            
-        # add platforms to groups
-        platforms.add(platform)
-        sprites.add(platform)
 
-def check_platforms(platform, platforms):
-    """Generates the spawning locations of the platforms."""
+        if index == 0:
 
-    # if a platform is spawned colliding with another platform, this method returns true and will result in another instance of a platform
-    if pygame.sprite.spritecollideany(platform, platforms):
-        return True
-    
-    else:
-        # check the current platforms and make sure that their is a decent space between them, returning true will result in another instance of a platform
-        for p in platforms:
+            for i in range(2):
+                platform = Platform(700 + 200 * i, 400 - 100 * i)
+                platforms.add(platform)
+                sprites.add(platform)
+        
+        elif index == 1:
 
-            if p == platform:
-                continue
-            elif (abs(platform.rect.top - p.rect.bottom) < 110) and (abs(platform.rect.bottom - p.rect.top) < 110):
-                return True
+            for i in range(1):
+                platform = Platform(700, 400 - 100 * i)
+                platforms.add(platform)
+                sprites.add(platform)
+        
 
-        # valid spacing + no collision detected, so no need to create another platform     
-        return False
-
-def check_obstacles(obstacles_hit):
-    """Determine the number of obstacles that the player sprite has currently collided with."""
-    
-    for obstacle in obstacles_hit:
-
-        if obstacle.hasTouched:
-            player.HP -= 1
-            obstacle.kill() # remove the sprite
 
 def bug_gen():
     """Generate the bug obstacles for the game."""
@@ -125,6 +107,40 @@ def bug_gen():
         sprites.add(bug)
         obstacles.add(bug)
 
+
+def coin_gen(coins, sprites, index):
+    """Generate the coin obstacles for the game."""
+
+    # check to make sure the list is empty before we generate new coins
+    if not coins:
+
+        
+
+        if index == 0:
+
+            # create first set of coins
+            for i in range(10):
+                if i < 5:
+                    coin = Currency(i * 45, 400 - 25 * i)                    
+                else:
+                    coin = Currency (i * 45, 400)
+                
+                # add coins to groups
+                sprites.add(coin)
+                coins.add(coin)
+        
+        elif index == 1:
+            for i in range(20):             
+                if i < 10:
+                    coin = Currency(i * 45, 400)
+                else:
+                    coin = Currency(i * 45, 300)           
+            # add coins to groups
+                sprites.add(coin)
+                coins.add(coin)
+            
+            
+    
 def game_quit():
     pygame.quit()
     sys.exit()
@@ -142,8 +158,11 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE: # jumping mechanic
                     player.jump(platforms_hit)
+
                 if event.key == pygame.K_ESCAPE:
                     gamePause.game_pause(screen, screen_width, screen_height, FramePerSec, FPS)
+            
+            
 
             # game over event; this occurs when the player's HP is 0
             if event.type == GAMEOVER:
@@ -154,20 +173,34 @@ def game_loop():
                     time.sleep(1)
                     game_quit()
 
+           # if event.type == SPEED:
+                #TODO: increase the speed of the images here...
+        
+
         # draw the background to the screen (NOTE: background is not included in sprite since the background is NOT a sprite)
         background.update()
         background.draw(screen)
 
+        index = random.randint(0,1)
+
        # generate platforms
-        plat_gen()
+        plat_gen(platforms, sprites, index)
 
         # generate bugs
-        bug_gen() 
+        bug_gen()
+
+        # generate coins
+        
+        coin_gen(coins, sprites, index)
 
         # update positions of sprites + draw them onto the screen
         for sprite in sprites:
             sprite.update()
             sprite.draw(screen)
+
+        # update the player + draw the player last (this is so the player image appears in front of other objects)
+        player.update()
+        player.draw(screen)
 
         # collision b/w coin sprite + player (3rd parameter is FALSE so we don't 'kill' the sprite)
         coins_hit = pygame.sprite.spritecollide(player, coins, False)
@@ -179,16 +212,17 @@ def game_loop():
         # collision b/w obstacle sprite + player
         obstacles_hit = pygame.sprite.spritecollide(player, obstacles, False)
 
-        # check how many obstacles that the player has collided with
-        check_obstacles(obstacles_hit)
+        
 
-        # removes the coins from the screen on the next iteration (so when a player collides with a coin, we don't draw it until it wraps to the other side of the screen)
-        for coin in coins_hit:
-            coin.hasTouched = True
+        # remove the coins that the player has come in contact with
+        Currency.collision(coins_hit)
 
-        # check the collisions b/w player + obstacles
-        for obstacle in obstacles_hit:
-            obstacle.hasTouched = True
+        # remove bugs that collide with player
+        Bug.collision(obstacles_hit, player)
+
+        
+
+        
 
         # when the player's HP goes to 0, post game over event
         if player.HP == 0:
