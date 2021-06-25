@@ -37,3 +37,13 @@ class Background():
         """Draw the background onto the screen with its respective coordinates."""
         surface.blit(self.image, (self.x1, self.y1))
         surface.blit(self.image, (self.x2, self.y2))
+
+
+    def inc_speed(self):
+        """Increase the speed at which the object moves."""
+        self.speed += 1
+
+    
+    def slowdown(self):
+        """Slow the object down when the player comes into collision with an obstacle"""
+        self.speed = 3
