@@ -8,28 +8,42 @@ class Bug(pygame.sprite.Sprite):
         self.image = pygame.image.load("bug.png")
         self.surface = pygame.Surface((20, 40))
         self.image = pygame.transform.scale(self.image, (40, 40))
-        self.rect = self.surface.get_rect(center = (600, 440))
-        self.hasTouched = False
+        self.rect = self.surface.get_rect(center = (300, 300))
+        self.speed = 3
+        self.touched = False
+        self.invisible = True
         
         
     def update(self):
         """Updates the current position of the bug."""
         
-        self.rect.x -= 3 # for each iteration, move left 4 units
-    
-        # wraps the Bug to the other side of the window when it goes out of bounds, visually
-        if (self.rect.left < -30):
-            self.rect.right = 640
-            self.rect.center = (640, 440)
+        self.rect.x -= self.speed
 
 
     def draw(self, screen):
         """Draws the bug to the screen."""
-        screen.blit(self.image, self.rect)
+        if not self.touched and not self.invisible:
+            screen.blit(self.image, self.rect)
 
     def collision(bugs_hit, player):
-        """A method that removes bug sprites when collision occurs b/w player and bug sprite."""
+        """A method that decreases HP when collision occurs b/w player and bug sprite."""
 
         for bug in bugs_hit:
-            bug.kill() # remove the sprite
-            player.HP -= 1 # decrease HP of the player
+
+            if not bug.touched:
+                bug.touched = True
+                player.HP -= 1 # decrease HP of the player
+
+    def relocate(self, x, y):
+        """Relocates bug sprite based on x and y arguments."""
+        self.rect.x = x
+        self.rect.y = y
+
+    def inc_speed(self):
+        """Increase the speed at which the object moves."""
+        self.speed += 1
+
+    
+    def slowdown(self):
+        """Slow the object down when the player comes into collision with an obstacle"""
+        self.speed = 3

@@ -3,33 +3,47 @@ import pygame
 class Currency(pygame.sprite.Sprite):
     """The currency of our game. The user can collect these objects to purchase items."""
     
-    def __init__(self, x, y):
+    def __init__(self):
         super().__init__()
         self.image = pygame.image.load("coin.png")
         self.surface = pygame.Surface((45, 45))
         self.image = pygame.transform.scale(self.image, (45, 45))
-        self.rect = self.surface.get_rect(center = (1000 + x, y))
+        self.rect = self.surface.get_rect(center = (600, 0))
+        self.speed = 3
+        self.touched = False
+        self.invisible = True
         
     def update(self):
-        """Updates the current position of the Player."""
+        """Updates the current position of the currency."""
         
-        self.rect.x -= 3 # for each iteration, move left 4 units
-
-        # wraps the coin to the other side of the screen
-        if (self.rect.left < -30):
-            self.kill() # remove the coin when it goes off the screen
+        self.rect.x -= self.speed
 
             
 
     def draw(self, surface):
         """Draws the coin to the screen."""
 
-        if self.rect.left < 650:
+        # if the coin has not collided w/ player + is a coin from a set to be drawn, then draw the coin to the screen
+        if not self.touched and not self.invisible:
             surface.blit(self.image, self.rect)
 
     
-    def collision(coins_hit):
+    def collision(self):
         """A method that removes coin sprites when collision occurs b/w player and coin sprite."""
+        self.touched = True
+    
 
-        for coin in coins_hit:
-                coin.kill() # remove the sprite if a collision is detected
+    def relocate(self, x, y):
+        """Relocate the coin based off x and y arguments."""
+        self.rect.x = x
+        self.rect.y = y
+    
+
+    def inc_speed(self):
+        """Increase the speed at which the object moves."""
+        self.speed += 1
+
+    
+    def slowdown(self):
+        """Slow the object down when the player comes into collision with an obstacle"""
+        self.speed = 3

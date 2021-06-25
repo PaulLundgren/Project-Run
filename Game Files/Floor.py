@@ -7,6 +7,7 @@ class Floor(pygame.sprite.Sprite):
         self.surface = pygame.Surface((640, 10))
         self.rect = self.surface.get_rect(center = (640 / 2, 475))
         self.surface.fill((255,0,0))
+        self.invisible = False
     
     
     def update(self):

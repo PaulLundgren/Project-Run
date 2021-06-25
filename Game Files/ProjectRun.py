@@ -11,9 +11,12 @@ from Player import *
 from Platform import *
 from Floor import *
 from Bug import *
+from End import *
 import gameIntro
 import gameFunctions
 import gamePause
+import Generator
+
 
 
 
@@ -42,105 +45,56 @@ bright_green = (0, 255, 0)
 # set the window caption for our game
 pygame.display.set_caption("Project Run")
 
-
-
 # group creation
 sprites = pygame.sprite.Group()
 coins = pygame.sprite.Group()
 platforms = pygame.sprite.Group()
 obstacles = pygame.sprite.Group()
 bugs = pygame.sprite.Group()
+end_spawn = pygame.sprite.Group()
 
 # Sprite creation
 player = Player()
 floor = Floor()
 
-# add sprites to respective groups
+# add Non-Generated sprites to respective groups (FIXME: rework this to include player as well)
 sprites.add(floor)
-
-# add floor to list of platform
 platforms.add(floor)
 
-# custom game over event
+# custom game over event; this occurs when the player's HP is 0
 GAMEOVER = USEREVENT + 1
 game_over = pygame.event.Event(GAMEOVER)
 
 # custom event that increases the speed of the images
 SPEED = USEREVENT + 2
-pygame.time.set_timer(SPEED, 30000) # every 30 seconds, increase the speed of the game
+pygame.time.set_timer(SPEED, 20000) # every 20 seconds, increase the speed of the game
 
+# custom event that respawns sprites
+REDRAW = USEREVENT + 3
+pygame.time.set_timer(REDRAW, 8000) # every 8 seconds, redraw objects on the other side of the screen
+
+# custom event that happens when the player reaches the end
+WIN = USEREVENT + 4
+player_wins = pygame.event.Event(WIN)
+
+# custom event that 'slows down' the player (happens when there is a collision b/w the player sprite and an obstacle)
+SLOWDOWN = USEREVENT + 5
+slowdown = pygame.event.Event(SLOWDOWN)
+
+# custom event that spawns the end destination (this happens after 90 seconds)
+#SPAWN_END = USEREVENT + 6
+#pygame.time.set_timer(SPAWN_END, 90000)
 
 
 # create our background
 background = Background()
 
+           
+# generate items outside game loop()
+Generator.coin_gen(coins, sprites)
+Generator.plat_gen(platforms, sprites)
+Generator.bug_gen(bugs, obstacles, sprites)
 
-def plat_gen(platforms, sprites, index):
-    """Generate the platforms for the player to utilize."""
-
-    # platforms empty; make platforms
-    if len(platforms) < 4:
-
-
-        if index == 0:
-
-            for i in range(2):
-                platform = Platform(700 + 200 * i, 400 - 100 * i)
-                platforms.add(platform)
-                sprites.add(platform)
-        
-        elif index == 1:
-
-            for i in range(1):
-                platform = Platform(700, 400 - 100 * i)
-                platforms.add(platform)
-                sprites.add(platform)
-        
-
-
-def bug_gen():
-    """Generate the bug obstacles for the game."""
-    
-    while len(bugs) < 1:
-        bug = Bug()
-
-        bugs.add(bug)
-        sprites.add(bug)
-        obstacles.add(bug)
-
-
-def coin_gen(coins, sprites, index):
-    """Generate the coin obstacles for the game."""
-
-    # check to make sure the list is empty before we generate new coins
-    if not coins:
-
-        
-
-        if index == 0:
-
-            # create first set of coins
-            for i in range(10):
-                if i < 5:
-                    coin = Currency(i * 45, 400 - 25 * i)                    
-                else:
-                    coin = Currency (i * 45, 400)
-                
-                # add coins to groups
-                sprites.add(coin)
-                coins.add(coin)
-        
-        elif index == 1:
-            for i in range(20):             
-                if i < 10:
-                    coin = Currency(i * 45, 400)
-                else:
-                    coin = Currency(i * 45, 300)           
-            # add coins to groups
-                sprites.add(coin)
-                coins.add(coin)
-            
-            
     
 def game_quit():
     pygame.quit()
@@ -157,15 +111,13 @@ def game_loop():
                 game_quit()
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE: # jumping mechanic
+                if event.key == pygame.K_SPACE:
                     player.jump(platforms_hit)
 
                 if event.key == pygame.K_ESCAPE:
                     gamePause.game_pause(screen, screen_width, screen_height, FramePerSec, FPS)
             
-            
-
-            # game over event; this occurs when the player's HP is 0
+        
             if event.type == GAMEOVER:
                 screen.fill((255,0,0))
                 pygame.display.update()
@@ -173,27 +125,48 @@ def game_loop():
                     sprite.kill()
                     time.sleep(1)
                     game_quit()
+            
+            if event.type == SPEED:
+                background.inc_speed()
+                
+                # increase speed of sprites that are not the floor or the player
+                for sprite in sprites:
+                    if not isinstance(sprite, Floor) and not isinstance(sprite, Player):
+                        sprite.inc_speed()
+            
+            if event.type == REDRAW:
+                x = random.randint(0, 1)
+                Generator.change_coins(coins, x)
+                Generator.change_platforms(platforms, x)
+                Generator.change_bugs(bugs, x)
 
-           # if event.type == SPEED:
-                #TODO: increase the speed of the images here...
+            if event.type == SLOWDOWN:
+                background.slowdown()
+
+                for sprite in sprites:
+                    if not isinstance(sprite, Floor) and not isinstance(sprite, Player):
+                        sprite.slowdown()
+
+           # if event.type == SPAWN_END:
+           #     end = End()
+           #     sprites.add(end)
+           #     end_spawn.add(end)
+
+            if event.type == WIN:
+                screen.fill((0,255,0))
+                pygame.display.update()
+                for sprite in sprites:
+                    sprite.kill()
+                    time.sleep(1)
+                    game_quit()
+
         
 
         # draw the background to the screen (NOTE: background is not included in sprite since the background is NOT a sprite)
         background.update()
         background.draw(screen)
 
-        index = random.randint(0,1)
-
-       # generate platforms
-        plat_gen(platforms, sprites, index)
-
-        # generate bugs
-        bug_gen()
-
-        # generate coins
         
-        coin_gen(coins, sprites, index)
-
         # update positions of sprites + draw them onto the screen
         for sprite in sprites:
             sprite.update()
@@ -213,21 +186,26 @@ def game_loop():
         # collision b/w obstacle sprite + player
         obstacles_hit = pygame.sprite.spritecollide(player, obstacles, False)
 
-        
+        # collision b/w the end sprite + player
+    #    end_hit = pygame.sprite.spritecollide(player, end_spawn, False)
 
+        
         # remove the coins that the player has come in contact with
-        Currency.collision(coins_hit)
+        for coin in coins_hit:
+            coin.collision()
 
         # remove bugs that collide with player
-        Bug.collision(obstacles_hit, player)
+        if obstacles_hit:
+            Bug.collision(obstacles_hit, player)
+            pygame.event.post(slowdown)
 
         
-
-        
-
         # when the player's HP goes to 0, post game over event
         if player.HP == 0:
             pygame.event.post(game_over)
+
+     #   if end_hit:
+     #       pygame.event.post(player_wins)
 
 
         # update the display
