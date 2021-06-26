@@ -1,3 +1,4 @@
+from ast import Param
 import pygame
 from Currency import *
 from Platform import *
@@ -32,8 +33,8 @@ def plat_gen(platforms, sprites):
 def bug_gen(bugs, obstacles, sprites):
     """Generate the bug obstacles for the game."""
 
-    # generate 2 bugs
-    for i in range(2):
+    # generate 6 bugs
+    for i in range(6):
         bug = Bug()
 
         # add bugs to lists
@@ -54,38 +55,124 @@ def change_coins(coins, index):
             if count < 6:
                 coin.relocate(600 + 45*x, 360)
                 count += 1
+                coin.invisible = False
                 
             elif 6 <= count < 9:
                 y += 1
                 coin.relocate(600 + 45*x, 360 - 30*y)
                 count += 1
+                coin.invisible = False
             elif 9 <= count < 12:
                 y -= 1
                 coin.relocate(600 + 45*x, 330 - 30*y)
                 count += 1
-            else:
+                coin.invisible = False
+            elif count < 18:
                 coin.relocate(600 + 45*x, 360)
+                count += 1
+                coin.invisible = False
+            else:
+                coin.relocate(0,0)
+                coin.invisible = True
 
             x += 1
             coin.touched = False
-            coin.invisible = False
+            
     
     # 2nd set
     if index == 1:
 
         for coin in coins:
             if count < 4:
-                coin.relocate(900, 400 - 20*x)
+                coin.relocate(1100 + 35*x, 200 + 30*count)
                 count += 1
-            elif 4 <= count < 8:
-                coin.relocate(945, 400 - 20*x)
-                count += 1
+                coin.invisible = False
             else:
-                coin.relocate(950 + 45*x, 400)
+                count = 0
+                x += 1
+                coin.relocate(0,0)
+                coin.invisible = True
             
             coin.touched = False
-            coin.invisible = False
+
+    
+    if index == 2:
+
+        for coin in coins:
+            if count < 2:
+                if y < 6:
+                    coin.relocate(1010 + 35*x, 290 + 30*count)
+
+                elif y < 12:
+                    coin.relocate(1240 + 35*x, 290 + 30*count)
+
+                count += 1
+                y += 1
+                coin.invisible = False
+            else:
+                count = 0
+                x += 1
+                
+                coin.invisible = True
+
+            coin.touched = False
+
+    if index == 3:
+
+        for coin in coins:
+
+            if count < 8:
+                coin.relocate(700 + 35*x, 350)
+                coin.invisible = False
+            elif count < 10:
+                coin.relocate(700 + 35*x, 350)
+                coin.invisible = True
+            elif count < 18:
+                coin.relocate(700 + 35*x, 275)    
+                coin.invisible = False
+            else:
+                coin.relocate(0, 0)
+                coin.invisible = True      
+            
+            count += 1
             x += 1
+            coin.touched = False
+
+    if index == 4:
+
+        for coin in coins:
+            if count < 5:
+                coin.relocate(700 + 35*x, 420)
+                coin.invisible = False
+                count += 1
+            elif count < 9:
+                coin.relocate(0,0)
+                coin.invisible = True
+                count += 1
+            elif count == 9:
+                coin.relocate(0, 0)
+                count = 0
+                coin.invisible = True
+            
+            x += 1
+            coin.touched = False
+
+    if index == 5:
+
+        for coin in coins:
+            if count < 3:
+                coin.relocate(670 + 35*x, 275 + 30*count)
+                count += 1
+                coin.invisible = False
+            else:
+                count = 0
+                x += 1
+                coin.relocate(0,0)
+                coin.invisible = True
+            
+            coin.touched = False
+            
+            
 
 
 def change_platforms(platforms, index):
@@ -94,6 +181,7 @@ def change_platforms(platforms, index):
     # used to change positions of certain platforms
     x = 0
     y = 0
+    count = 0
 
     if index == 0:
 
@@ -115,10 +203,55 @@ def change_platforms(platforms, index):
         for platform in platforms:
 
             if isinstance(platform, Platform):
-                platform.relocate(700, 400 - 100*y)
+
+                if count < 1:
+                    platform.relocate(700, 400)
+                    x += 1
+                    y += 1
+                    platform.invisible = False
+
+    if index == 2:
+
+        for platform in platforms:
+
+            if isinstance(platform, Platform):
+                platform.relocate(0,0)
+                platform.invisible = True
+
+    if index == 3:
+
+        for platform in platforms:
+
+            if isinstance(platform, Platform):
+                if count < 2:
+                    platform.relocate(700 + 350*x, 400 - 75*y)
+                    platform.invisible = False                   
+                else:
+                    platform.relocate(0, 0)
+                    platform.invisible = True
+
                 x += 1
                 y += 1
-                platform.invisible = False
+                count += 1
+
+    if index == 4:
+
+        for platform in platforms:
+
+            if isinstance(platform, Platform):
+                platform.relocate(0,0)
+                platform.invisible = True
+    
+
+    if index == 5:
+
+        for platform in platforms:
+
+            if isinstance(platform, Platform):
+                platform.relocate(0,0)
+                platform.invisible = True
+
+
 
 
 def change_bugs(bugs, index):
@@ -127,28 +260,130 @@ def change_bugs(bugs, index):
     # used to change positions of certain bugs
     x = 0
     y = 0
+    count = 0
 
     if index == 0:
 
         for bug in bugs:
 
-            if y % 2 == 0:
+            if count < 1:
                 bug.relocate(975 + 250*x, 335 - 250*y)
                 bug.invisible = False
+                count += 1
+            elif count < 2:
+                bug.relocate(1025, 400)
+                bug.invisible = False
+                count += 1
             else:
+                bug.relocate(0,0)
                 bug.invisible = True
             
+            bug.touched = False
             x += 1
             y += 1
-            bug.touched = False
+            
 
     
 
     if index == 1:
 
         for bug in bugs:
-            bug.relocate(700 + 50*x, 430)
+            if count < 1:
+                bug.relocate(600 + 50*x, 390)
+                count += 1
+                bug.invisible = False
+            elif count < 2:
+                bug.relocate(1025, 350)
+                count += 1
+                bug.invisible = False
+            elif count < 5:
+                bug.relocate(1150 + 50*x, 430)
+                bug.invisible = False
+                count += 1
+            else:
+                bug.relocate(0,0)
+                bug.invisible = True
+
             bug.touched = False
-            bug.invisible = False
             x += 1
             y += 1
+
+    if index == 2:
+
+        for bug in bugs:
+
+            if count < 3:
+                bug.relocate(1000 + 45*x, 420)
+                bug.invisible = False
+                count += 1
+            else:
+                bug.relocate(1200 + 45*x, 420)
+                bug.invisible = False
+            
+            x += 1
+            bug.touched = False
+
+    if index == 3:
+
+        for bug in bugs:
+
+            if count < 1:
+                bug.relocate(720, 430)
+                bug.invisible = False
+
+            elif count < 2:
+                bug.relocate(1000, 330)
+                bug.invisible = False
+
+            elif count < 3:
+
+                bug.relocate(1345, 275)
+                bug.invisible = False
+            
+            else:
+                bug.relocate(0,0)
+                bug.invisible = True
+            
+            count += 1
+            bug.touched = False
+
+
+    if index == 4:
+
+        for bug in bugs:
+
+            if count < 3:
+
+                bug.relocate(915 + 40*x, 420)
+                bug.invisible = False
+                count += 1
+                x += 1
+            else:
+                bug.relocate(1150 + 40*x, 420)
+                bug.invisible = False
+                x += 1
+
+            bug.touched = False
+
+
+    if index == 5:
+
+        for bug in bugs:
+
+            if count < 2:
+                bug.relocate(700, 420 - 45*y)
+                count += 1
+                y += 1
+                bug.invisible = False
+            elif count < 4:
+                bug.relocate(700, 240 - 45*x)
+                count += 1
+                y = 0
+                x += 1
+                bug.invisible = False
+            else:
+                bug.relocate(855, 330 - 45*y)
+                y += 1
+                bug.invisible = False
+
+            bug.touched = False

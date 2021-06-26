@@ -12,7 +12,7 @@ class Background():
         self.y1 = 0
 
         # 2nd set of coordinates, with the y-coordinate matching the height of our image
-        self.x2 = self.rect.width
+        self.x2 = self.rect.width - 1
         self.y2 = 0
 
         # the speed of the scrolling image
