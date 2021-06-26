@@ -30,7 +30,7 @@ class Bug(pygame.sprite.Sprite):
 
         for bug in bugs_hit:
 
-            if not bug.touched:
+            if not bug.touched and not bug.invisible:
                 bug.touched = True
                 player.HP -= 1 # decrease HP of the player
 

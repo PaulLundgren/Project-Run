@@ -135,7 +135,7 @@ def game_loop():
                         sprite.inc_speed()
             
             if event.type == REDRAW:
-                x = random.randint(0, 1)
+                x = random.randint(0,5)
                 Generator.change_coins(coins, x)
                 Generator.change_platforms(platforms, x)
                 Generator.change_bugs(bugs, x)
