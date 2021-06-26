@@ -16,6 +16,7 @@ import gameIntro
 import gameFunctions
 import gamePause
 import Generator
+import gameShop
 
 
 
@@ -116,6 +117,8 @@ def game_loop():
 
                 if event.key == pygame.K_ESCAPE:
                     gamePause.game_pause(screen, screen_width, screen_height, FramePerSec, FPS)
+                if event.key == pygame.K_p:
+                    gameShop.game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player)
             
         
             if event.type == GAMEOVER:
