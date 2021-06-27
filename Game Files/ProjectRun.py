@@ -74,11 +74,9 @@ game_over = pygame.event.Event(GAMEOVER)
 
 # custom event that increases the speed of the images
 SPEED = USEREVENT + 2
-pygame.time.set_timer(SPEED, 20000) # every 20 seconds, increase the speed of the game
 
 # custom event that respawns sprites
 REDRAW = USEREVENT + 3
-pygame.time.set_timer(REDRAW, 8000) # every 8 seconds, redraw objects on the other side of the screen
 
 # custom event that happens when the player reaches the end
 WIN = USEREVENT + 4
@@ -87,7 +85,6 @@ player_wins = pygame.event.Event(WIN)
 # custom event that 'slows down' the player (happens when there is a collision b/w the player sprite and an obstacle)
 SLOWDOWN = USEREVENT + 5
 slowdown = pygame.event.Event(SLOWDOWN)
-
 
 # create our background
 background = Background()
@@ -110,6 +107,10 @@ def game_loop():
     counter = 0 # keep track of the time in game (in milliseconds)
     isEnd = False
     FramePerSec = pygame.time.Clock()
+    pygame.time.set_timer(SPEED, 20000) # every 20 seconds, increase the speed of the game
+    pygame.time.set_timer(REDRAW, 8000) # every 8 seconds, redraw objects on the other side of the screen
+
+
     offset = FramePerSec.get_time()
 
     while True:
