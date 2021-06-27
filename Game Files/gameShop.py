@@ -13,10 +13,14 @@ dark_yellow = (200,200,0)
 darker_yellow = (150,150,0)
 pause = True
 
+def unpause():
+    global pause
+    pause = False
 
 def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
     #def item_one():
-
+    global pause
+    pause = True
     # screen.fill(white)
     largeText = pygame.font.Font('freesansbold.ttf', 30)
     TitleSurf, TitleRect = gameFunctions.text_objects("Store", largeText)
@@ -40,7 +44,7 @@ def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
                 pygame.quit()
                 quit()
         # x-cord + rect.width > mouse pos x > x-cord and y-cord + rect.height > mouse pos y > y-cord
-            gameFunctions.button(screen, "Continue", start_x, start_y, start_w, start_h, green, bright_green, ProjectRun.game_loop)
+            gameFunctions.button(screen, "Continue", start_x, start_y, start_w, start_h, green, bright_green, unpause)
             gameFunctions.button(screen, "Quit", exit_x, exit_y, exit_w, exit_h, red, bright_red, ProjectRun.game_quit)
             if(gameFunctions.booleanButton(screen, "Item", item_x, item_y, item_w, item_h, yellow, dark_yellow)):
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -49,3 +53,4 @@ def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
 
         pygame.display.update()
         FramePerSec.tick(FPS)
+    return
