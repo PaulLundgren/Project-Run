@@ -28,10 +28,12 @@ class Currency(pygame.sprite.Sprite):
             surface.blit(self.image, self.rect)
 
     
-    def collision(self):
+    def collision(coins_hit, player):
         """A method that removes coin sprites when collision occurs b/w player and coin sprite."""
-        self.touched = True
-    
+        for coin in coins_hit:
+            if not coin.touched and not coin.invisible:
+                coin.touched = True
+                player.Coins += 1 # Increase Coin total on hit
 
     def relocate(self, x, y):
         """Relocate the coin based off x and y arguments."""

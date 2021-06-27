@@ -45,7 +45,6 @@ bright_green = (0, 255, 0)
 
 # set the window caption for our game
 pygame.display.set_caption("Project Run")
-
 # group creation
 sprites = pygame.sprite.Group()
 coins = pygame.sprite.Group()
@@ -57,6 +56,7 @@ end_spawn = pygame.sprite.Group()
 # Sprite creation
 player = Player()
 floor = Floor()
+end = End()
 
 # add Non-Generated sprites to respective groups (FIXME: rework this to include player as well)
 sprites.add(floor)
@@ -83,7 +83,7 @@ SLOWDOWN = USEREVENT + 5
 slowdown = pygame.event.Event(SLOWDOWN)
 
 # custom event that spawns the end destination (this happens after 90 seconds)
-#SPAWN_END = USEREVENT + 6
+SPAWN_END = USEREVENT + 6
 #pygame.time.set_timer(SPAWN_END, 90000)
 
 
@@ -103,9 +103,14 @@ def game_quit():
 
 
 def game_loop():
+    pygame.time.set_timer(SPAWN_END, 10000)
     global pause
+    counter = 0
+    FramePerSec = pygame.time.Clock()
+    offset = FramePerSec.get_time()
     while True:
-
+        counter += FramePerSec.get_time() - offset
+        print(counter)
         # go through the events
         for event in pygame.event.get():
             if event.type == QUIT:  # constant QUIT comes from pygames.local import statement
@@ -127,7 +132,7 @@ def game_loop():
                 for sprite in sprites:
                     sprite.kill()
                     time.sleep(1)
-                    game_quit()
+                game_quit()
             
             if event.type == SPEED:
                 background.inc_speed()
@@ -142,18 +147,19 @@ def game_loop():
                 Generator.change_coins(coins, x)
                 Generator.change_platforms(platforms, x)
                 Generator.change_bugs(bugs, x)
+               # if checkEnd:
+                #    Generator.addEnd(end_spawn, time)
 
             if event.type == SLOWDOWN:
                 background.slowdown()
-
                 for sprite in sprites:
                     if not isinstance(sprite, Floor) and not isinstance(sprite, Player):
                         sprite.slowdown()
 
-           # if event.type == SPAWN_END:
-           #     end = End()
-           #     sprites.add(end)
-           #     end_spawn.add(end)
+            #if event.type == SPAWN_END:
+                #end = End()
+                #sprites.add(end)
+                #end_spawn.add(end)
 
             if event.type == WIN:
                 screen.fill((0,255,0))
@@ -188,14 +194,15 @@ def game_loop():
 
         # collision b/w obstacle sprite + player
         obstacles_hit = pygame.sprite.spritecollide(player, obstacles, False)
+        coins_hit = pygame.sprite.spritecollide(player, coins, False)
 
         # collision b/w the end sprite + player
     #    end_hit = pygame.sprite.spritecollide(player, end_spawn, False)
 
         
         # remove the coins that the player has come in contact with
-        for coin in coins_hit:
-            coin.collision()
+        if coins_hit:
+            Currency.collision(coins_hit, player)
 
         # remove bugs that collide with player
         if obstacles_hit:
@@ -210,7 +217,7 @@ def game_loop():
      #   if end_hit:
      #       pygame.event.post(player_wins)
 
-
+        gameFunctions.show_score(screen, "Coins : " + str(player.Coins))
         # update the display
         pygame.display.update()
         FramePerSec.tick(FPS)

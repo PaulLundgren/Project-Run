@@ -25,7 +25,10 @@ class Player(pygame.sprite.Sprite):
         self.position = vector((260, 430))
         self.velocity = vector(0,0)
         self.acceleration = vector(0,0)
+        # Player attributes, i.e money, HP, Lives
         self.HP = 3
+        self.Lives = 3
+        self.Coins = 0
            
     
     def update(self):
