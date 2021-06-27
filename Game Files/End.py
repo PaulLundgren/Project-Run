@@ -6,7 +6,7 @@ class End(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.surface = pygame.Surface((20, 480)) # random horizontal size for our surface
+        self.surface = pygame.Surface((40, 480)) # random horizontal size for our surface
         self.rect = self.surface.get_rect(center = (650, 240))
         self.surface.fill((0,255,0))
         self.speed = 3
@@ -15,7 +15,7 @@ class End(pygame.sprite.Sprite):
     
     def update(self):
         """Changes the postition of the End sprite relative to the screen."""
-        self.rect.x -= self.speed
+        self.rect.x = 600
 
     def draw(self, screen):
         """Draws the End sprite onto the screen."""

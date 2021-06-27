@@ -43,6 +43,8 @@ green = (0, 200, 0)
 bright_red = (255, 0, 0)
 bright_green = (0, 255, 0)
 
+
+
 # set the window caption for our game
 pygame.display.set_caption("Project Run")
 # group creation
@@ -82,10 +84,6 @@ player_wins = pygame.event.Event(WIN)
 SLOWDOWN = USEREVENT + 5
 slowdown = pygame.event.Event(SLOWDOWN)
 
-# custom event that spawns the end destination (this happens after 90 seconds)
-SPAWN_END = USEREVENT + 6
-#pygame.time.set_timer(SPAWN_END, 90000)
-
 
 # create our background
 background = Background()
@@ -103,15 +101,17 @@ def game_quit():
 
 
 def game_loop():
-    pygame.time.set_timer(SPAWN_END, 10000)
+    
     global pause
-    counter = 0
+    counter = 0 # keep track of the time in game (in milliseconds)
+    isEnd = False
     FramePerSec = pygame.time.Clock()
     offset = FramePerSec.get_time()
+
     while True:
         counter += FramePerSec.get_time() - offset
         print(counter)
-        # go through the events
+        
         for event in pygame.event.get():
             if event.type == QUIT:  # constant QUIT comes from pygames.local import statement
                 game_quit()
@@ -128,10 +128,8 @@ def game_loop():
         
             if event.type == GAMEOVER:
                 screen.fill((255,0,0))
-                pygame.display.update()
-                for sprite in sprites:
-                    sprite.kill()
-                    time.sleep(1)
+                pygame.display.update()                   
+                time.sleep(1)
                 game_quit()
             
             if event.type == SPEED:
@@ -143,12 +141,22 @@ def game_loop():
                         sprite.inc_speed()
             
             if event.type == REDRAW:
-                x = random.randint(0,5)
-                Generator.change_coins(coins, x)
-                Generator.change_platforms(platforms, x)
-                Generator.change_bugs(bugs, x)
-               # if checkEnd:
-                #    Generator.addEnd(end_spawn, time)
+
+                # spawn end after 90 seconds
+                if isEnd:
+                    x = -1
+                    Generator.change_coins(coins, x)
+                    Generator.change_platforms(platforms, x)
+                    Generator.change_bugs(bugs, x)
+                    end_spawn.add(end)
+                    sprites.add(end)
+
+                if not isEnd:
+                    x = random.randint(0,5)
+                    Generator.change_coins(coins, x)
+                    Generator.change_platforms(platforms, x)
+                    Generator.change_bugs(bugs, x) 
+               
 
             if event.type == SLOWDOWN:
                 background.slowdown()
@@ -156,18 +164,12 @@ def game_loop():
                     if not isinstance(sprite, Floor) and not isinstance(sprite, Player):
                         sprite.slowdown()
 
-            #if event.type == SPAWN_END:
-                #end = End()
-                #sprites.add(end)
-                #end_spawn.add(end)
 
             if event.type == WIN:
                 screen.fill((0,255,0))
-                pygame.display.update()
-                for sprite in sprites:
-                    sprite.kill()
-                    time.sleep(1)
-                    game_quit()
+                pygame.display.update()              
+                time.sleep(1)
+                game_quit()
 
         
 
@@ -197,7 +199,7 @@ def game_loop():
         coins_hit = pygame.sprite.spritecollide(player, coins, False)
 
         # collision b/w the end sprite + player
-    #    end_hit = pygame.sprite.spritecollide(player, end_spawn, False)
+        end_hit = pygame.sprite.spritecollide(player, end_spawn, False)
 
         
         # remove the coins that the player has come in contact with
@@ -214,10 +216,16 @@ def game_loop():
         if player.HP == 0:
             pygame.event.post(game_over)
 
-     #   if end_hit:
-     #       pygame.event.post(player_wins)
+        # after 90 seconds, spawn the end condition for the level
+        if counter > 90000 and not isEnd:
+            isEnd = True
+
+        # player wins when they collide with the end sprite
+        if end_hit:
+            pygame.event.post(player_wins)
 
         gameFunctions.show_score(screen, "Coins : " + str(player.Coins))
+        
         # update the display
         pygame.display.update()
         FramePerSec.tick(FPS)

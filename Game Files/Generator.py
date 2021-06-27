@@ -4,8 +4,8 @@ from Currency import *
 from Platform import *
 from Bug import *
 
-
 """Functions listed here are intended to generate non-player sprites."""
+
 def coin_gen(coins, sprites):
     """Generate the coin obstacles for the game."""
 
@@ -47,6 +47,13 @@ def change_coins(coins, index):
     x = 0
     y = 0
     count = 0
+
+    # special set that occurs when the end condition is met.
+    if index == -1:
+        for coin in coins:
+            coin.relocate(0,0)
+            coin.invisible = True
+            coin.touched = False
 
     # 1st set
     if index == 0:
@@ -183,6 +190,15 @@ def change_platforms(platforms, index):
     y = 0
     count = 0
 
+    # special set that occurs when the end condition is met.
+    if index == -1:
+        for platform in platforms:
+
+            if isinstance(platform, Platform):
+                platform.relocate(0,0)
+                platform.invisible = True
+                
+
     if index == 0:
 
         for platform in platforms:
@@ -261,6 +277,14 @@ def change_bugs(bugs, index):
     x = 0
     y = 0
     count = 0
+
+    # special set that occurs when the end condition is met.
+    if index == -1:
+        for bug in bugs:
+            bug.relocate(0,0)
+            bug.invisible = True
+            bug.touched = False
+
 
     if index == 0:
 
@@ -387,3 +411,4 @@ def change_bugs(bugs, index):
                 bug.invisible = False
 
             bug.touched = False
+
