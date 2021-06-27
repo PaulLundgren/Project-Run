@@ -47,6 +47,10 @@ bright_green = (0, 255, 0)
 
 # set the window caption for our game
 pygame.display.set_caption("Project Run")
+
+# background music for the game
+# pygame.mixer.Sound.play(pygame.mixer.Sound("music2.wav")) # play sound effect for hitting a coin
+
 # group creation
 sprites = pygame.sprite.Group()
 coins = pygame.sprite.Group()

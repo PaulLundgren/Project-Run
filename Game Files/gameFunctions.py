@@ -15,6 +15,9 @@ def button(screen, message, x, y, w, h, default_color, active_color, action=None
     if x + w > mouse[0] > x and y + h > mouse[1] > y:  # if the mouse is over the button
         pygame.draw.rect(screen, active_color, (x, y, w, h))
         if click[0] == 1 and action != None:
+            # play sound effect for hitting a button
+            pygame.mixer.Sound.play(pygame.mixer.Sound("click.wav"))
+            pygame.mixer.music.stop()
             action()
     else:
         pygame.draw.rect(screen, default_color, (x, y, w, h))
