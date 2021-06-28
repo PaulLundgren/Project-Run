@@ -1,4 +1,5 @@
 import pygame
+import sys
 from GameFiles.gameFunctions import *
 from GameFiles.ProjectRun import *
 white = (255, 255, 255)
@@ -11,6 +12,7 @@ intro = True
 def unpause():
     global intro
     intro = False
+
 def game_quit():
     pygame.quit()
     sys.exit()

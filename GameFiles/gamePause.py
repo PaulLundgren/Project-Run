@@ -1,4 +1,5 @@
 import pygame
+import sys
 from GameFiles.gameFunctions import *
 from GameFiles.ProjectRun import *
 white = (255, 255, 255)
@@ -13,6 +14,9 @@ def unpause():
     global pause
     pause = False
 
+def game_quit():
+    pygame.quit()
+    sys.exit()
 
 def game_pause(screen, screen_width, screen_height, FramePerSec, FPS):
     # screen.fill(white)

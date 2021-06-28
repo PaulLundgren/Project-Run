@@ -16,9 +16,7 @@ class Player(pygame.sprite.Sprite):
         # variables for the player sprite
         # pygame.image.load(os.path.join(os.path.dirname(__file__), 'assets', 'tiles', 'grass_tile.png')).convert()
         # self.image = pygame.image.load("player.png")
-        print(os.path.join(os.path.dirname(__file__)))
         self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'player.png')).convert_alpha()
-        print(os.path.join(os.path.dirname(__file__), 'Images', 'player.png'))
         self.image = pygame.transform.scale(self.image, (85, 85)) # scale the image
         self.width = screen_width
         self.height = screen_height
