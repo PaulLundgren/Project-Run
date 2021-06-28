@@ -37,8 +37,7 @@ def game_intro(screen, screen_width, screen_height, FramePerSec, FPS):
                 pygame.quit()
                 quit()
         # x-cord + rect.width > mouse pos x > x-cord and y-cord + rect.height > mouse pos y > y-cord
-        if(booleanButton(screen, "Start", start_x, start_y, start_w, start_h, green, bright_green)):
-            unpause()
+        button(screen, "Start", start_x, start_y, start_w, start_h, green, bright_green, unpause)
         button(screen, "Quit", exit_x, exit_y, exit_w, exit_h, red, bright_red, game_quit)
         pygame.display.update()
         FramePerSec.tick(FPS)
