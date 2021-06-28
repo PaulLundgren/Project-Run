@@ -56,8 +56,14 @@ def downButton (screen, message, x, y, w, h, default_color):
     screen.blit(textSurf, textRect)
 
 def show_score(screen, message):
-    score_text = pygame.font.Font("freesansbold.ttf", 20)
+    score_text = pygame.font.Font("freesansbold.ttf", 40)
     textSurf, textRect = text_objects(message, score_text)
+    screen.blit(textSurf, textRect)
+
+def show_health(screen, message):
+    score_text = pygame.font.Font("freesansbold.ttf", 40)
+    textSurf, textRect = text_objects(message, score_text)
+    textRect.center = (540, 20)
     screen.blit(textSurf, textRect)
 
 

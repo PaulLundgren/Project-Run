@@ -231,6 +231,7 @@ def game_loop():
             pygame.event.post(player_wins)
 
         show_score(screen, "Coins : " + str(player.Coins))
+        show_health(screen, "Health : " + str(player.HP))
 
         # update the display
         pygame.display.update()
