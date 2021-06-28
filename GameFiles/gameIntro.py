@@ -1,6 +1,6 @@
-import gameFunctions
 import pygame
-import ProjectRun
+from GameFiles.gameFunctions import *
+from GameFiles.ProjectRun import *
 white = (255, 255, 255)
 black = (0, 0, 0)
 red = (200, 0, 0)
@@ -11,11 +11,14 @@ intro = True
 def unpause():
     global intro
     intro = False
+def game_quit():
+    pygame.quit()
+    sys.exit()
 
 def game_intro(screen, screen_width, screen_height, FramePerSec, FPS):
     screen.fill(white)
     largeText = pygame.font.Font('freesansbold.ttf', 80)
-    TitleSurf, TitleRect = gameFunctions.text_objects("Project Run", largeText)
+    TitleSurf, TitleRect = text_objects("Project Run", largeText)
     TitleRect.center = ((screen_width/2),(screen_height/2))
     screen.blit(TitleSurf, TitleRect)
     start_x = 150
@@ -32,8 +35,9 @@ def game_intro(screen, screen_width, screen_height, FramePerSec, FPS):
                 pygame.quit()
                 quit()
         # x-cord + rect.width > mouse pos x > x-cord and y-cord + rect.height > mouse pos y > y-cord
-        gameFunctions.button(screen, "Start", start_x, start_y, start_w, start_h, green, bright_green, ProjectRun.game_loop)
-        gameFunctions.button(screen, "Quit", exit_x, exit_y, exit_w, exit_h, red, bright_red, ProjectRun.game_quit)
+        if(booleanButton(screen, "Start", start_x, start_y, start_w, start_h, green, bright_green)):
+            unpause()
+        button(screen, "Quit", exit_x, exit_y, exit_w, exit_h, red, bright_red, game_quit)
         pygame.display.update()
         FramePerSec.tick(FPS)
     return

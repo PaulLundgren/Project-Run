@@ -1,8 +1,8 @@
 from ast import Param
 import pygame
-from Currency import *
-from Platform import *
-from Bug import *
+from GameFiles.Bug import *
+from GameFiles.Platform import *
+from GameFiles.Currency import *
 
 
 """Functions listed here are intended to generate non-player sprites."""

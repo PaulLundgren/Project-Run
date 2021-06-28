@@ -1,11 +1,12 @@
 import pygame
-
+import os
 class Currency(pygame.sprite.Sprite):
     """The currency of our game. The user can collect these objects to purchase items."""
     
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("coin.png")
+        #self.image = pygame.image.load("coin.png")
+        self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'coin.png')).convert_alpha()
         self.surface = pygame.Surface((45, 45))
         self.image = pygame.transform.scale(self.image, (45, 45))
         self.rect = self.surface.get_rect(center = (600, 0))

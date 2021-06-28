@@ -4,23 +4,20 @@ import pygame
 import sys
 import time
 import random
+import os
 from pygame.locals import *
-from Background import *
-from Currency import *
-from Player import *
-from Platform import *
-from Floor import *
-from Bug import *
-from End import *
-import gameIntro
-import gameFunctions
-import gamePause
-import Generator
-import gameShop
-
-
-
-
+from GameFiles.Background import *
+from GameFiles.Currency import *
+from GameFiles.Player import *
+from GameFiles.Platform import *
+from GameFiles.Floor import *
+from GameFiles.Bug import *
+from GameFiles.End import *
+from GameFiles.gameIntro import *
+from GameFiles.gameFunctions import *
+from GameFiles.gamePause import *
+from GameFiles.Generator import *
+from GameFiles.gameShop import *
 
 
 # initialize pygame modules
@@ -92,9 +89,9 @@ background = Background()
 
            
 # generate items outside game loop()
-Generator.coin_gen(coins, sprites)
-Generator.plat_gen(platforms, sprites)
-Generator.bug_gen(bugs, obstacles, sprites)
+coin_gen(coins, sprites)
+plat_gen(platforms, sprites)
+bug_gen(bugs, obstacles, sprites)
 
     
 def game_quit():
@@ -121,9 +118,9 @@ def game_loop():
                     player.jump(platforms_hit)
 
                 if event.key == pygame.K_ESCAPE:
-                    gamePause.game_pause(screen, screen_width, screen_height, FramePerSec, FPS)
+                    game_pause(screen, screen_width, screen_height, FramePerSec, FPS)
                 if event.key == pygame.K_p:
-                    gameShop.game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player)
+                    game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player)
             
         
             if event.type == GAMEOVER:
@@ -132,7 +129,7 @@ def game_loop():
                 for sprite in sprites:
                     sprite.kill()
                     time.sleep(1)
-                game_quit()
+                    game_quit()
             
             if event.type == SPEED:
                 background.inc_speed()
@@ -144,9 +141,9 @@ def game_loop():
             
             if event.type == REDRAW:
                 x = random.randint(0,5)
-                Generator.change_coins(coins, x)
-                Generator.change_platforms(platforms, x)
-                Generator.change_bugs(bugs, x)
+                change_coins(coins, x)
+                change_platforms(platforms, x)
+                change_bugs(bugs, x)
                # if checkEnd:
                 #    Generator.addEnd(end_spawn, time)
 
@@ -217,7 +214,7 @@ def game_loop():
      #   if end_hit:
      #       pygame.event.post(player_wins)
 
-        gameFunctions.show_score(screen, "Coins : " + str(player.Coins))
+        show_score(screen, "Coins : " + str(player.Coins))
         # update the display
         pygame.display.update()
         FramePerSec.tick(FPS)
@@ -225,7 +222,7 @@ def game_loop():
 
 # Game Loop
 def main():
-    gameIntro.game_intro(screen, screen_width, screen_height, FramePerSec, FPS)
+    game_intro(screen, screen_width, screen_height, FramePerSec, FPS)
     game_loop()
 
 

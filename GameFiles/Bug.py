@@ -1,11 +1,12 @@
 import pygame
-
+import os
 class Bug(pygame.sprite.Sprite):
     """Represents a type of obstacle that the player must avoid. Slows the player down when collision occurs."""
     
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("bug.png")
+        # self.image = pygame.image.load("bug.png")
+        self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'bug.png')).convert_alpha()
         self.surface = pygame.Surface((20, 40))
         self.image = pygame.transform.scale(self.image, (40, 40))
         self.rect = self.surface.get_rect(center = (300, 300))

@@ -1,4 +1,5 @@
 import pygame
+import os
 from pygame.locals import *
 
 
@@ -13,7 +14,11 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
 
         # variables for the player sprite
-        self.image = pygame.image.load("player.png")
+        # pygame.image.load(os.path.join(os.path.dirname(__file__), 'assets', 'tiles', 'grass_tile.png')).convert()
+        # self.image = pygame.image.load("player.png")
+        print(os.path.join(os.path.dirname(__file__)))
+        self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'player.png')).convert_alpha()
+        print(os.path.join(os.path.dirname(__file__), 'Images', 'player.png'))
         self.image = pygame.transform.scale(self.image, (85, 85)) # scale the image
         self.surface = pygame.Surface((30, 85)) # set the image's surface      
         self.rect = self.surface.get_rect(center = (260, 430)) # set where the player spawns + it's coordinates relative to the screen
