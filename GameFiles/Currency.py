@@ -3,13 +3,16 @@ import os
 class Currency(pygame.sprite.Sprite):
     """The currency of our game. The user can collect these objects to purchase items."""
     
-    def __init__(self):
+    def __init__(self, screen_width, screen_height):
         super().__init__()
         #self.image = pygame.image.load("coin.png")
         self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'coin.png')).convert_alpha()
         self.surface = pygame.Surface((45, 45))
         self.image = pygame.transform.scale(self.image, (45, 45))
         self.rect = self.surface.get_rect(center = (600, 0))
+        self.sound = pygame.mixer.Sound("coin.wav")
+        self.width = screen_width
+        self.height = screen_height
         self.speed = 3
         self.touched = False
         self.invisible = True
@@ -33,6 +36,8 @@ class Currency(pygame.sprite.Sprite):
         """A method that removes coin sprites when collision occurs b/w player and coin sprite."""
         for coin in coins_hit:
             if not coin.touched and not coin.invisible:
+                pygame.mixer.Sound.play(pygame.mixer.Sound("coin.wav")) # play sound effect for hitting a coin
+                pygame.mixer.music.stop()
                 coin.touched = True
                 player.Coins += 1 # Increase Coin total on hit
 

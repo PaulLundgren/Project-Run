@@ -3,11 +3,13 @@ import random
 
 class Platform(pygame.sprite.Sprite):
     """Represents randomly generated surfaces that the Player sprite can jump onto and move across."""
-    def __init__(self):
+    def __init__(self, screen_width, screen_height):
         super().__init__()
         self.surface = pygame.Surface((300, 20)) # random horizontal size for our surface
         self.rect = self.surface.get_rect(center = (650, 400))
         self.surface.fill((255,255,0))
+        self.width = screen_width
+        self.height = screen_height
         self.speed = 3
         self.invisible = True # will be used to ignore platforms
     

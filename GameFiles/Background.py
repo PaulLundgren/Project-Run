@@ -1,6 +1,7 @@
 import pygame
 import os
 
+
 class Background():
     """The background for our game."""
 
