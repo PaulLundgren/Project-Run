@@ -18,7 +18,11 @@ To pip install:
 4. Enjoy!
 
 Controls:
+
 ESC: Pause Menu
+
 P: Shop Menu
+
 A and D: for left and right movement respectivly
+
 SPACE: To jump
