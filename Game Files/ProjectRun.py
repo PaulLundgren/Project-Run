@@ -31,8 +31,8 @@ FPS = 60
 FramePerSec = pygame.time.Clock()
 
 # create a blank screen
-screen_width = 640
-screen_height = 480
+screen_width = 1280
+screen_height = 720
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 #colors
@@ -60,9 +60,9 @@ bugs = pygame.sprite.Group()
 end_spawn = pygame.sprite.Group()
 
 # Sprite creation
-player = Player()
-floor = Floor()
-end = End()
+player = Player(screen_width, screen_height)
+floor = Floor(screen_width, screen_height)
+end = End(screen_width, screen_height)
 
 # add Non-Generated sprites to respective groups (FIXME: rework this to include player as well)
 sprites.add(floor)
@@ -87,13 +87,13 @@ SLOWDOWN = USEREVENT + 5
 slowdown = pygame.event.Event(SLOWDOWN)
 
 # create our background
-background = Background()
+background = Background(screen_width, screen_height)
 
            
 # generate items outside game loop()
-Generator.coin_gen(coins, sprites)
-Generator.plat_gen(platforms, sprites)
-Generator.bug_gen(bugs, obstacles, sprites)
+Generator.coin_gen(coins, sprites, screen_width, screen_height)
+Generator.plat_gen(platforms, sprites, screen_width, screen_height)
+Generator.bug_gen(bugs, obstacles, sprites, screen_width, screen_height)
 
     
 def game_quit():
@@ -157,7 +157,7 @@ def game_loop():
                     sprites.add(end)
 
                 if not isEnd:
-                    x = random.randint(0,5)
+                    x = 2
                     Generator.change_coins(coins, x)
                     Generator.change_platforms(platforms, x)
                     Generator.change_bugs(bugs, x) 
@@ -222,7 +222,7 @@ def game_loop():
             pygame.event.post(game_over)
 
         # after 90 seconds, spawn the end condition for the level
-        if counter > 90000 and not isEnd:
+        if counter > 10000 and not isEnd:
             isEnd = True
 
         # player wins when they collide with the end sprite

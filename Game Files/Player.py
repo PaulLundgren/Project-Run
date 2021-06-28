@@ -9,12 +9,14 @@ FRICTION = -0.12 # represents friction
 class Player(pygame.sprite.Sprite):
     """Represents the Player Sprite in our game."""
 
-    def __init__(self):
+    def __init__(self, screen_width, screen_height):
         super().__init__()
 
         # variables for the player sprite
         self.image = pygame.image.load("player.png")
         self.image = pygame.transform.scale(self.image, (85, 85)) # scale the image
+        self.width = screen_width
+        self.height = screen_height
         self.surface = pygame.Surface((30, 85)) # set the image's surface      
         self.rect = self.surface.get_rect(center = (260, 430)) # set where the player spawns + it's coordinates relative to the screen
         self.flip_LEFT = False
@@ -66,8 +68,8 @@ class Player(pygame.sprite.Sprite):
         self.position += self.velocity + 0.5 * self.acceleration
 
         # boundaries for our screen so the player does not go off the screen
-        if self.position.x >= 590:
-            self.position.x = 590
+        if self.position.x >= self.width - 40:
+            self.position.x = self.width - 40
         
         if self.position.x <= 0:
             self.position.x = 0

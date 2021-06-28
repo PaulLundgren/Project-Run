@@ -1,10 +1,12 @@
 import pygame
 
+
 class Background():
     """The background for our game."""
 
-    def __init__(self):
+    def __init__(self, screen_width, screen_height):
         self.image = pygame.image.load("background_image.jpg").convert() # store image
+        self.image = pygame.transform.scale(self.image, (screen_width, screen_height)) # scale the image
         self.rect = self.image.get_rect() # store a rectangle TODO: Resize the image to match the window size
 
         # 1st set of coordinates

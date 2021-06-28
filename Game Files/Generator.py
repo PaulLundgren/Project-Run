@@ -6,36 +6,36 @@ from Bug import *
 
 """Functions listed here are intended to generate non-player sprites."""
 
-def coin_gen(coins, sprites):
+def coin_gen(coins, sprites, screen_width, screen_height):
     """Generate the coin obstacles for the game."""
 
     # generate 20 coins
     for i in range(20):
-        coin = Currency()
+        coin = Currency(screen_width, screen_height)
 
         # add coin to lists
         sprites.add(coin)
         coins.add(coin)
 
 
-def plat_gen(platforms, sprites):
+def plat_gen(platforms, sprites, screen_width, screen_height):
     """Generate the platform obstacles for the game."""
 
     # generate 4 platforms
     for i in range(4):
-        platform = Platform()
+        platform = Platform(screen_width, screen_height)
 
         # add platforms to lists
         platforms.add(platform)
         sprites.add(platform)
 
 
-def bug_gen(bugs, obstacles, sprites):
+def bug_gen(bugs, obstacles, sprites, screen_width, screen_height):
     """Generate the bug obstacles for the game."""
 
     # generate 6 bugs
     for i in range(6):
-        bug = Bug()
+        bug = Bug(screen_width, screen_height)
 
         # add bugs to lists
         bugs.add(bug)
@@ -60,22 +60,22 @@ def change_coins(coins, index):
 
         for coin in coins:
             if count < 6:
-                coin.relocate(600 + 45*x, 360)
+                coin.relocate(coin.width + 45*x, coin.height - 120)
                 count += 1
                 coin.invisible = False
                 
             elif 6 <= count < 9:
                 y += 1
-                coin.relocate(600 + 45*x, 360 - 30*y)
+                coin.relocate(coin.width + 45*x, (coin.height - 120) - 30*y)
                 count += 1
                 coin.invisible = False
             elif 9 <= count < 12:
                 y -= 1
-                coin.relocate(600 + 45*x, 330 - 30*y)
+                coin.relocate(coin.width + 45*x, (coin.height - 150) - 30*y)
                 count += 1
                 coin.invisible = False
             elif count < 18:
-                coin.relocate(600 + 45*x, 360)
+                coin.relocate(coin.width + 45*x, coin.height - 120)
                 count += 1
                 coin.invisible = False
             else:
@@ -91,7 +91,7 @@ def change_coins(coins, index):
 
         for coin in coins:
             if count < 4:
-                coin.relocate(1100 + 35*x, 200 + 30*count)
+                coin.relocate((coin.width + 460) + 35*x, (coin.height - 280) + 30*count)
                 count += 1
                 coin.invisible = False
             else:
@@ -108,10 +108,10 @@ def change_coins(coins, index):
         for coin in coins:
             if count < 2:
                 if y < 6:
-                    coin.relocate(1010 + 35*x, 290 + 30*count)
+                    coin.relocate((coin.height + 370) + 35*x, (coin.height - 190) + 30*count)
 
                 elif y < 12:
-                    coin.relocate(1240 + 35*x, 290 + 30*count)
+                    coin.relocate((coin.height + 600) + 35*x, (coin.height - 190) + 30*count)
 
                 count += 1
                 y += 1
@@ -206,7 +206,7 @@ def change_platforms(platforms, index):
             if isinstance(platform, Platform):
 
                 if y % 2 == 0:
-                    platform.relocate(600 + 250*x, 400)
+                    platform.relocate(platform.width+ 250*x, platform.height - 80)
                     platform.invisible = False
                 else:
                     platform.invisible = True
@@ -221,7 +221,7 @@ def change_platforms(platforms, index):
             if isinstance(platform, Platform):
 
                 if count < 1:
-                    platform.relocate(700, 400)
+                    platform.relocate(platform.width + 60, platform.height - 80)
                     x += 1
                     y += 1
                     platform.invisible = False
@@ -291,11 +291,11 @@ def change_bugs(bugs, index):
         for bug in bugs:
 
             if count < 1:
-                bug.relocate(975 + 250*x, 335 - 250*y)
+                bug.relocate(bug.width + 345 + 250*x, (bug.height - 145) - 250*y)
                 bug.invisible = False
                 count += 1
             elif count < 2:
-                bug.relocate(1025, 400)
+                bug.relocate(bug.width + 395, bug.height - 80)
                 bug.invisible = False
                 count += 1
             else:
@@ -313,15 +313,15 @@ def change_bugs(bugs, index):
 
         for bug in bugs:
             if count < 1:
-                bug.relocate(600 + 50*x, 390)
+                bug.relocate(bug.width + 50*x, bug.height - 70)
                 count += 1
                 bug.invisible = False
             elif count < 2:
-                bug.relocate(1025, 350)
+                bug.relocate(bug.width + 385, bug.height - 130)
                 count += 1
                 bug.invisible = False
             elif count < 5:
-                bug.relocate(1150 + 50*x, 430)
+                bug.relocate((bug.width + 510) + 50*x, bug.height - 50)
                 bug.invisible = False
                 count += 1
             else:
