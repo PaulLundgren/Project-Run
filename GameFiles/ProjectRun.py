@@ -113,11 +113,11 @@ def game_loop():
 
 
     offset = FramePerSec.get_time()
+    start_time = pygame.time.get_ticks()
 
     while True:
         counter += FramePerSec.get_time() - offset
         # print(counter)
-
         for event in pygame.event.get():
             if event.type == QUIT:  # constant QUIT comes from pygames.local import statement
                 game_quit()
@@ -233,8 +233,10 @@ def game_loop():
         show_score(screen, "Coins : " + str(player.Coins))
         show_ui(screen, "Health : " + str(player.HP), 540, 20)
         
-        # Time displayed TODO
-        show_ui(screen, "Time: ", 540, 75)
+        time_since_enter = pygame.time.get_ticks() - start_time
+        seconds = (time_since_enter/1000)%60
+        seconds = int(seconds)
+        show_ui(screen, "Game Time: " + ("%d" % (seconds)), 490, 75)
 
         # update the display
         pygame.display.update()
