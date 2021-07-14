@@ -18,11 +18,6 @@ from GameFiles.gamePause import *
 from GameFiles.Generator import *
 from GameFiles.gameShop import *
 
-
-
-
-
-
 # initialize pygame modules
 pygame.init()
 
@@ -75,9 +70,10 @@ game_over = pygame.event.Event(GAMEOVER)
 
 # custom event that increases the speed of the images
 SPEED = USEREVENT + 2
-
+speed_event = pygame.event.Event(SPEED)
 # custom event that respawns sprites
 REDRAW = USEREVENT + 3
+redraw_event = pygame.event.Event(REDRAW)
 
 # custom event that happens when the player reaches the end
 WIN = USEREVENT + 4
@@ -108,18 +104,31 @@ def game_loop():
     counter = 0 # keep track of the time in game (in milliseconds)
     isEnd = False
     FramePerSec = pygame.time.Clock()
-    pygame.time.set_timer(SPEED, 20000) # every 20 seconds, increase the speed of the game
-    pygame.time.set_timer(REDRAW, 8000) # every 8 seconds, redraw objects on the other side of the screen
+    #pygame.time.set_timer(SPEED, 20000) # every 20 seconds, increase the speed of the game
+    #pygame.time.set_timer(REDRAW, 8000) # every 8 seconds, redraw objects on the other side of the screen
 
 
     offset = FramePerSec.get_time()
     start_time = pygame.time.get_ticks()
+    pause_offset = 0
     pause = False
     time_since_pause = 0
-
+    counter += FramePerSec.get_time() - offset
+    redraw_offset = 8000
+    speed_offset = 20000
+    #redraw_counter = FramePerSec.get_time() - offset
+    #speed_counter = FramePerSec.get_time() - offset
     while True:
         counter += FramePerSec.get_time() - offset
-        # print(counter)
+        #redraw_counter += FramePerSec.get_time() - offset
+        #speed_counter += FramePerSec.get_time() - offset
+        # counter checks to throw events in respect to game time
+        if counter > speed_offset: # after 20 seconds in game, the player will speed up
+            pygame.event.post(speed_event)
+            speed_offset = speed_offset + 20000
+        if counter > redraw_offset: # after 8 seconds in game, the next set of obstacles will be drawn
+            pygame.event.post(redraw_event)
+            redraw_offset = redraw_offset + 8000
         for event in pygame.event.get():
             if event.type == QUIT:  # constant QUIT comes from pygames.local import statement
                 game_quit()
@@ -130,6 +139,8 @@ def game_loop():
 
                 if event.key == pygame.K_ESCAPE:
                     pause = True
+                   # pause_offset = FramePerSec.get_time()
+                    pygame.time.wait()
                     pause = game_pause(screen, screen_width, screen_height, FramePerSec, FPS)
                 if event.key == pygame.K_p:
                     game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player)
@@ -212,6 +223,7 @@ def game_loop():
         if obstacles_hit:
             Bug.collision(obstacles_hit, player)
             pygame.event.post(slowdown)
+            speed_offset = speed_offset + 20000
 
 
         # when the player's HP goes to 0, post game over event
@@ -230,23 +242,23 @@ def game_loop():
         show_ui(screen, "Health : " + str(player.HP), 540, 20)
         
         time_since_enter = pygame.time.get_ticks() - start_time
-        if pause:
-            time_since_pause = pygame.time.get_ticks()
+        #if pause:
+        #    time_since_pause = pygame.time.get_ticks()
         seconds_paused = 0
-        if not pause:
-            if time_since_pause > 0:
-                seconds_paused = (time_since_pause/1000)%60
-                seconds_paused = int(seconds_paused)
-                print(seconds_paused)
-                # time_since_enter = time_since_enter - time_since_pause
-            seconds = (time_since_enter/1000)%60
-            seconds = int(seconds)
-            if seconds_paused > 0:
-                print('hereeeeeee')
-                seconds = seconds - seconds_paused
+       # if(pause_offset > 0):
+        #    seconds_paused = (pause_offset/1000)%60
+        #if not pause:
+       # if time_since_pause > 0:
+        #    seconds_paused = (time_since_pause/1000) % 60
+        #    seconds_paused = int(seconds_paused)
+        #    print(seconds_paused)
+            # time_since_enter = time_since_enter - time_since_pause
+        seconds = (counter/1000) % 60 # timer for ui
+        seconds = int(seconds)
+        #if seconds_paused > 0:
+            #seconds = seconds - seconds_paused
 
-            show_ui(screen, "Game Time: " + ("%d" % (seconds)), 490, 75)
-        print('-------------------------------------')
+        show_ui(screen, "Game Time: " + ("%d" % (seconds)), 490, 75)
         # update the display
         pygame.display.update()
         FramePerSec.tick(FPS)

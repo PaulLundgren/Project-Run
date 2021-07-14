@@ -1,5 +1,6 @@
 import pygame
 import os
+import sys
 from GameFiles.gameFunctions import *
 from GameFiles.ProjectRun import *
 white = (255, 255, 255)
