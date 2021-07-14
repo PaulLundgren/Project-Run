@@ -114,6 +114,8 @@ def game_loop():
 
     offset = FramePerSec.get_time()
     start_time = pygame.time.get_ticks()
+    pause = False
+    time_since_pause = 0
 
     while True:
         counter += FramePerSec.get_time() - offset
@@ -127,7 +129,8 @@ def game_loop():
                     player.jump(platforms_hit)
 
                 if event.key == pygame.K_ESCAPE:
-                    game_pause(screen, screen_width, screen_height, FramePerSec, FPS)
+                    pause = True
+                    pause = game_pause(screen, screen_width, screen_height, FramePerSec, FPS)
                 if event.key == pygame.K_p:
                     game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player)
 
@@ -156,28 +159,21 @@ def game_loop():
                     change_bugs(bugs, x)
                     end_spawn.add(end)
                     sprites.add(end)
-
                 if not isEnd:
                     x = random.randint(0,5)
                     change_coins(coins, x)
                     change_platforms(platforms, x)
                     change_bugs(bugs, x)
-
-
             if event.type == SLOWDOWN:
                 background.slowdown()
                 for sprite in sprites:
                     if not isinstance(sprite, Floor) and not isinstance(sprite, Player):
                         sprite.slowdown()
-
-
             if event.type == WIN:
                 screen.fill((0,255,0))
                 pygame.display.update()
                 time.sleep(1)
                 game_quit()
-
-
 
         # draw the background to the screen (NOTE: background is not included in sprite since the background is NOT a sprite)
         background.update()
@@ -234,10 +230,23 @@ def game_loop():
         show_ui(screen, "Health : " + str(player.HP), 540, 20)
         
         time_since_enter = pygame.time.get_ticks() - start_time
-        seconds = (time_since_enter/1000)%60
-        seconds = int(seconds)
-        show_ui(screen, "Game Time: " + ("%d" % (seconds)), 490, 75)
+        if pause:
+            time_since_pause = pygame.time.get_ticks()
+        seconds_paused = 0
+        if not pause:
+            if time_since_pause > 0:
+                seconds_paused = (time_since_pause/1000)%60
+                seconds_paused = int(seconds_paused)
+                print(seconds_paused)
+                # time_since_enter = time_since_enter - time_since_pause
+            seconds = (time_since_enter/1000)%60
+            seconds = int(seconds)
+            if seconds_paused > 0:
+                print('hereeeeeee')
+                seconds = seconds - seconds_paused
 
+            show_ui(screen, "Game Time: " + ("%d" % (seconds)), 490, 75)
+        print('-------------------------------------')
         # update the display
         pygame.display.update()
         FramePerSec.tick(FPS)
