@@ -44,4 +44,4 @@ def game_pause(screen, screen_width, screen_height, FramePerSec, FPS):
         button(screen, "Quit", exit_x, exit_y, exit_w, exit_h, red, bright_red, game_quit)
         pygame.display.update()
         FramePerSec.tick(FPS)
-    return
+    return pause

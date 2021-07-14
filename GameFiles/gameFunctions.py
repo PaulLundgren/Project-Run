@@ -60,10 +60,11 @@ def show_score(screen, message):
     textSurf, textRect = text_objects(message, score_text)
     screen.blit(textSurf, textRect)
 
-def show_health(screen, message):
+def show_ui(screen, message, x, y):
     score_text = pygame.font.Font("freesansbold.ttf", 40)
     textSurf, textRect = text_objects(message, score_text)
-    textRect.center = (540, 20)
+    # textRect.center = (540, 20)
+    textRect.center = (x, y)
     screen.blit(textSurf, textRect)
 
 
