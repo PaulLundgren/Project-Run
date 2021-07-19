@@ -140,7 +140,7 @@ def game_loop():
                 if event.key == pygame.K_ESCAPE:
                     pause = True
                    # pause_offset = FramePerSec.get_time()
-                    pygame.time.wait()
+                    # pygame.time.wait()
                     pause = game_pause(screen, screen_width, screen_height, FramePerSec, FPS)
                 if event.key == pygame.K_p:
                     game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player)
@@ -241,22 +241,8 @@ def game_loop():
         show_score(screen, "Coins : " + str(player.Coins))
         show_ui(screen, "Health : " + str(player.HP), 540, 20)
         
-        time_since_enter = pygame.time.get_ticks() - start_time
-        #if pause:
-        #    time_since_pause = pygame.time.get_ticks()
-        seconds_paused = 0
-       # if(pause_offset > 0):
-        #    seconds_paused = (pause_offset/1000)%60
-        #if not pause:
-       # if time_since_pause > 0:
-        #    seconds_paused = (time_since_pause/1000) % 60
-        #    seconds_paused = int(seconds_paused)
-        #    print(seconds_paused)
-            # time_since_enter = time_since_enter - time_since_pause
         seconds = (counter/1000) % 60 # timer for ui
         seconds = int(seconds)
-        #if seconds_paused > 0:
-            #seconds = seconds - seconds_paused
 
         show_ui(screen, "Game Time: " + ("%d" % (seconds)), 490, 75)
         # update the display
