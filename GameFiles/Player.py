@@ -34,6 +34,7 @@ class Player(pygame.sprite.Sprite):
         self.HP = 3
         self.Lives = 3
         self.Coins = 0
+        self.Score = 0
            
     
     def update(self):
