@@ -39,10 +39,14 @@ def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
     exit_y = 350
     exit_w = 100
     exit_h = 50
-    item_x = 100
-    item_y = 100
+    item1_x = 100
+    item1_y = 100
     item_w = 200
     item_h = 50
+    item2_x = 100
+    item2_y = 160
+    item3_x = 100
+    item3_y = 220
     while pause:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -51,12 +55,24 @@ def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
         # x-cord + rect.width > mouse pos x > x-cord and y-cord + rect.height > mouse pos y > y-cord
             button(screen, "Continue", start_x, start_y, start_w, start_h, green, bright_green, unpause)
             button(screen, "Quit", exit_x, exit_y, exit_w, exit_h, red, bright_red, game_quit)
-            if(booleanButton(screen, "Buy a Heart = 50", item_x, item_y, item_w, item_h, yellow, dark_yellow)):
+            if(booleanButton(screen, "Buy a Heart = 50", item1_x, item1_y, item_w, item_h, yellow, dark_yellow)):
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    downButton(screen, "Buy a Heart = 50", item_x, item_y, item_w, item_h, darker_yellow)
+                    downButton(screen, "Buy a Heart = 50", item1_x, item1_y, item_w, item_h, darker_yellow)
                     if(player.Coins >= 50):
                         player.HP = player.HP + 1
                         player.Coins = player.Coins - 50
+            if(booleanButton(screen, "increase speed = 1", item2_x, item2_y, item_w, item_h, yellow, dark_yellow)):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    downButton(screen, "increase speed = 1", item2_x, item2_y, item_w, item_h, darker_yellow)
+                    if(player.Coins >= 1):
+                        player.permanent_increase_speed()
+                        player.Coins = player.Coins - 1
+            if(booleanButton(screen, "increase jump = 1", item3_x, item3_y, item_w, item_h, yellow, dark_yellow)):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    downButton(screen, "increase jump = 1", item3_x, item3_y, item_w, item_h, darker_yellow)
+                    if(player.Coins >= 1):
+                        player.permanent_increase_jump()
+                        player.Coins = player.Coins - 1
 
         pygame.display.update()
         FramePerSec.tick(FPS)
