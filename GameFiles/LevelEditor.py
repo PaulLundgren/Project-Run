@@ -45,6 +45,7 @@ screen = pygame.display.set_mode((screen_width, screen_height + boundary))
 
 # some colors
 
+PURPLE = (255, 0, 255)
 BLUE = (0, 0, 240)
 GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
@@ -68,7 +69,7 @@ for row in range(ROWS):
 
 # create the ground
 for tile in range(0, COLS_MAX):
-    level[ROWS - 1][tile] = 3
+    level[ROWS - 1][tile] = 2
 
 scroll_left = False
 scroll_right = False
@@ -94,6 +95,9 @@ floor.fill((255,0,0))
 platform = pygame.Surface((TILE_SIZE, TILE_SIZE))
 platform.fill((255,255,0))
 
+end = pygame.Surface((TILE_SIZE, TILE_SIZE))
+end.fill(PURPLE)
+
 # save button
 save = pygame.Surface((3 * TILE_SIZE, TILE_SIZE / 2))
 save.fill(GREEN)
@@ -102,11 +106,12 @@ save_button = Button((screen_width // 2) - 75, screen_height + boundary - 40, sa
 # store image tiles in list
 img_list = []
 
-img_list.append(player)
+
 img_list.append(coin)
 img_list.append(bug)
 img_list.append(floor)
 img_list.append(platform)
+img_list.append(end)
 
 
 tile_list = []

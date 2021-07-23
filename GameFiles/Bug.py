@@ -3,18 +3,13 @@ import os
 class Bug(pygame.sprite.Sprite):
     """Represents a type of obstacle that the player must avoid. Slows the player down when collision occurs."""
     
-    def __init__(self, screen_width, screen_height):
+    def __init__(self, tile_data):
         super().__init__()
-        # self.image = pygame.image.load("bug.png")
-        self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'bug.png')).convert_alpha()
-        self.surface = pygame.Surface((20, 40))
-        self.image = pygame.transform.scale(self.image, (40, 40))
-        self.rect = self.surface.get_rect(center = (300, 300))
-        self.width = screen_width
-        self.height = screen_height
+        self.image = tile_data[0]
+        self.rect = tile_data[1]
         self.speed = 3
         self.touched = False
-        self.invisible = True
+        self.invisible = False
         
         
     def update(self):
@@ -25,7 +20,7 @@ class Bug(pygame.sprite.Sprite):
 
     def draw(self, screen):
         """Draws the bug to the screen."""
-        if not self.touched and not self.invisible:
+        if not self.touched:
             screen.blit(self.image, self.rect)
 
     def collision(bugs_hit, player):
@@ -33,7 +28,7 @@ class Bug(pygame.sprite.Sprite):
 
         for bug in bugs_hit:
 
-            if not bug.touched and not bug.invisible:
+            if not bug.touched:
                 pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'damage.wav')))
                 #pygame.mixer.Sound.play(pygame.mixer.Sound("damage.wav")) # play sound effect for hitting a bug
                 pygame.mixer.music.stop()

@@ -3,23 +3,16 @@ import os
 class Currency(pygame.sprite.Sprite):
     """The currency of our game. The user can collect these objects to purchase items."""
     
-    def __init__(self, screen_width, screen_height):
+    def __init__(self, tile_data):
         super().__init__()
-        #self.image = pygame.image.load("coin.png")
-        self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'coin.png')).convert_alpha()
-        self.surface = pygame.Surface((45, 45))
-        self.image = pygame.transform.scale(self.image, (45, 45))
-        self.rect = self.surface.get_rect(center = (600, 0))
-        # self.sound = pygame.mixer.Sound("coin.wav")
-        self.width = screen_width
-        self.height = screen_height
+        self.image = tile_data[0]
+        self.rect = tile_data[1]
         self.speed = 3
         self.touched = False
-        self.invisible = True
+        self.invisible = False
         
     def update(self):
         """Updates the current position of the currency."""
-        
         self.rect.x -= self.speed
 
             
@@ -28,14 +21,14 @@ class Currency(pygame.sprite.Sprite):
         """Draws the coin to the screen."""
 
         # if the coin has not collided w/ player + is a coin from a set to be drawn, then draw the coin to the screen
-        if not self.touched and not self.invisible:
+        if not self.touched:
             surface.blit(self.image, self.rect)
 
     
     def collision(coins_hit, player):
         """A method that removes coin sprites when collision occurs b/w player and coin sprite."""
         for coin in coins_hit:
-            if not coin.touched and not coin.invisible:
+            if not coin.touched:
                 pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'coin.wav')))
                 # pygame.mixer.Sound.play(pygame.mixer.Sound("coin.wav")) # play sound effect for hitting a coin
                 pygame.mixer.music.stop()
