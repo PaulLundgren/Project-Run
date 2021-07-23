@@ -1,5 +1,5 @@
 import pygame
-
+import csv
 import os
 
 
@@ -161,7 +161,12 @@ while True:
     draw_text(f"Level: {current_level}", font, WHITE, screen_width - 100, screen_height + boundary - 40)
 
     # saving & load data for the level
-    save_button.draw()
+    if save_button.draw():
+         with open(f"level_{current_level}.csv", "w", newline='') as csv_file:
+             writer = csv.writer(csv_file, delimiter = ',')
+             for row in level:
+                 writer.writerow(row)
+
     draw_text(f"SAVE", font, BLACK, screen_width // 2 - 29, screen_height + boundary - 37)
 
     
@@ -212,6 +217,12 @@ while True:
         
 
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                current_level += 1
+
+            if event.key == pygame.K_DOWN and current_level > 0:
+                current_level -= 1
+
             if event.key == pygame.K_LEFT:
                 scroll_left = True
 
