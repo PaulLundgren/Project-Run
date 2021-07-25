@@ -1,22 +1,26 @@
 """Side-scrolling game. Run away from your project leader and push your commits to repo."""
 
+
+
 import pygame
 import sys
 import time
 import random
+import csv
 from pygame.locals import *
 from GameFiles.Background import *
-from GameFiles.Currency import *
+from Currency import *
 from GameFiles.Player import *
-from GameFiles.Platform import *
+from Platform import *
 from GameFiles.Floor import *
-from GameFiles.Bug import *
+from Bug import *
 from GameFiles.End import *
 from GameFiles.gameIntro import *
 from gameFunctions import *
 from GameFiles.gamePause import *
 from GameFiles.Generator import *
 from GameFiles.gameShop import *
+from Level import Level
 
 # initialize pygame modules
 pygame.init()
@@ -29,6 +33,9 @@ FramePerSec = pygame.time.Clock()
 screen_width = 640
 screen_height = 480
 screen = pygame.display.set_mode((screen_width, screen_height))
+ROWS = 10
+COLS = 1300
+TILE_SIZE = screen_height // ROWS
 
 #colors
 white = (255, 255, 255)
@@ -38,6 +45,51 @@ green = (0, 200, 0)
 bright_red = (255, 0, 0)
 bright_green = (0, 255, 0)
 
+# image things
+images = []
+
+coin = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'coin.png')).convert_alpha()
+coin = pygame.transform.scale(coin, (TILE_SIZE, TILE_SIZE))
+bug = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'bug.png')).convert_alpha()
+bug = pygame.transform.scale(bug, (TILE_SIZE, TILE_SIZE))
+floor = pygame.Surface((TILE_SIZE, TILE_SIZE))
+floor.fill((255,0,0))
+platform = pygame.Surface((TILE_SIZE, TILE_SIZE))
+platform.fill((255,255,0))
+end = pygame.Surface((TILE_SIZE, TILE_SIZE))
+end.fill((255, 0, 255))
+
+images.append(coin)
+images.append(bug)
+images.append(floor)
+images.append(platform)
+images.append(end)
+
+# group creation
+sprites = pygame.sprite.Group()
+coins = pygame.sprite.Group()
+platforms = pygame.sprite.Group()
+obstacles = pygame.sprite.Group()
+bugs = pygame.sprite.Group()
+end_spawn = pygame.sprite.Group()
+
+# loading level
+current_level = 1
+
+
+tiles = []
+for row in range(ROWS):
+    row = [-1] * COLS
+    tiles.append(row)
+
+with open(f"level_{current_level}.csv", newline="") as csv_file:
+    reader = csv.reader(csv_file, delimiter = ',')
+    for x, row in enumerate(reader):
+        for y, tile in enumerate(row):
+            tiles[x][y] = int(tile)
+
+level = Level()
+level.process(tiles, images, coins, platforms, obstacles, sprites, end_spawn, TILE_SIZE)
 
 
 # set the window caption for our game
@@ -47,13 +99,7 @@ pygame.display.set_caption("Project Run")
 # pygame.mixer.Sound.play(pygame.mixer.Sound("music2.wav")) # play sound effect for hitting a coin
 #pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'music2.wav')))
 
-# group creation
-sprites = pygame.sprite.Group()
-coins = pygame.sprite.Group()
-platforms = pygame.sprite.Group()
-obstacles = pygame.sprite.Group()
-bugs = pygame.sprite.Group()
-end_spawn = pygame.sprite.Group()
+
 
 # Sprite creation
 player = Player(screen_width, screen_height)
@@ -71,9 +117,6 @@ game_over = pygame.event.Event(GAMEOVER)
 # custom event that increases the speed of the images
 SPEED = USEREVENT + 2
 speed_event = pygame.event.Event(SPEED)
-# custom event that respawns sprites
-REDRAW = USEREVENT + 3
-redraw_event = pygame.event.Event(REDRAW)
 
 # custom event that happens when the player reaches the end
 WIN = USEREVENT + 4
@@ -88,9 +131,9 @@ background = Background(screen_width, screen_height)
 
 
 # generate items outside game loop()
-coin_gen(coins, sprites, screen_width, screen_height)
-plat_gen(platforms, sprites, screen_width, screen_height)
-bug_gen(bugs, obstacles, sprites, screen_width, screen_height)
+# coin_gen(coins, sprites, screen_width, screen_height)
+# plat_gen(platforms, sprites, screen_width, screen_height)
+# bug_gen(bugs, obstacles, sprites, screen_width, screen_height)
 
 
 def game_quit():
@@ -114,7 +157,7 @@ def game_loop():
     pause = False
     time_since_pause = 0
     counter += FramePerSec.get_time() - offset
-    redraw_offset = 8000
+    redraw_offset = 12000
     speed_offset = 20000
     #redraw_counter = FramePerSec.get_time() - offset
     #speed_counter = FramePerSec.get_time() - offset
@@ -126,9 +169,7 @@ def game_loop():
         if counter > speed_offset: # after 20 seconds in game, the player will speed up
             pygame.event.post(speed_event)
             speed_offset = speed_offset + 20000
-        if counter > redraw_offset: # after 8 seconds in game, the next set of obstacles will be drawn
-            pygame.event.post(redraw_event)
-            redraw_offset = redraw_offset + 8000
+        
         for event in pygame.event.get():
             if event.type == QUIT:  # constant QUIT comes from pygames.local import statement
                 game_quit()
@@ -160,26 +201,13 @@ def game_loop():
                     if not isinstance(sprite, Floor) and not isinstance(sprite, Player):
                         sprite.inc_speed()
 
-            if event.type == REDRAW:
-
-                # spawn end after 90 seconds
-                if isEnd:
-                    x = -1
-                    change_coins(coins, x)
-                    change_platforms(platforms, x)
-                    change_bugs(bugs, x)
-                    end_spawn.add(end)
-                    sprites.add(end)
-                if not isEnd:
-                    x = random.randint(0,5)
-                    change_coins(coins, x)
-                    change_platforms(platforms, x)
-                    change_bugs(bugs, x)
+                
             if event.type == SLOWDOWN:
                 background.slowdown()
                 for sprite in sprites:
                     if not isinstance(sprite, Floor) and not isinstance(sprite, Player):
                         sprite.slowdown()
+
             if event.type == WIN:
                 screen.fill((0,255,0))
                 pygame.display.update()
@@ -189,6 +217,9 @@ def game_loop():
         # draw the background to the screen (NOTE: background is not included in sprite since the background is NOT a sprite)
         background.update()
         background.draw(screen)
+
+        # draw tiles
+       # level.draw(screen)
 
 
         # update positions of sprites + draw them onto the screen
