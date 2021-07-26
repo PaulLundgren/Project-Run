@@ -1,8 +1,7 @@
 import pygame
 import os
 
-
-
+green = (0, 225, 0)
 black = (0, 0, 0)
 def text_objects(text, font):  # function to simplify creating text to the screen, taking in as (Font,Size)
     text_surface = font.render(text, True, black)
@@ -55,16 +54,18 @@ def downButton (screen, message, x, y, w, h, default_color):
     textRect.center = ((x+(w/2)), (y+(h/2)))
     screen.blit(textSurf, textRect)
 
-def show_coins(screen, message):
-    score_text = pygame.font.Font("freesansbold.ttf", 40)
-    textSurf, textRect = text_objects(message, score_text)
-    screen.blit(textSurf, textRect)
+# def show_coins(screen, message, x, y):
+    # score_text = pygame.font.Font("freesansbold.ttf", 40)
+    # text = score_text.render(message, True, green, blue)
+    # textSurf, textRect = text_objects(text, score_text)
+    # screen.blit(textSurf, textRect)
+
 
 def show_ui(screen, message, x, y):
-    score_text = pygame.font.Font("freesansbold.ttf", 40)
-    textSurf, textRect = text_objects(message, score_text)
-    # textRect.center = (540, 20)
-    textRect.center = (x, y)
-    screen.blit(textSurf, textRect)
+    score_text = pygame.font.Font("freesansbold.ttf", 27)
+    text = score_text.render(message, True, green, black)
+    textRect = text.get_rect()
+    textRect.center = (x,y)
+    screen.blit(text, textRect)
 
 

@@ -272,7 +272,7 @@ def game_loop():
         seconds = (counter/1000) % 60 # timer for ui
         seconds = int(seconds)
 
-        show_ui(screen, "Game Time: " + ("%d" % (seconds)), 490, 75)
+        show_ui(screen, "Game Time: " + ("%d" % (seconds)), 510, 75)
 
         score = (0.5 * player.Coins) + ( 0.05 * seconds) - ( 0.4 * player.HP)
         score = round(score, 2)
@@ -281,9 +281,10 @@ def game_loop():
         player.Score = score
 
 
-        show_coins(screen, "Coins : " + str(player.Coins))
+        show_ui(screen, "Coins : " + str(player.Coins), 100, 15)
         show_ui(screen, "Health : " + str(player.HP), 540, 20)
-        show_ui(screen, "Score : " + str(score), 90, 60)
+        show_ui(screen, "Score : " + str(score), 100, 60)
+        
         # update the display
         pygame.display.update()
         FramePerSec.tick(FPS)
