@@ -34,6 +34,7 @@ class Currency(pygame.sprite.Sprite):
                 pygame.mixer.music.stop()
                 coin.touched = True
                 player.Coins += 1 # Increase Coin total on hit
+                player.total_coins += 1 # Increase Coin total on hit
 
     def relocate(self, x, y):
         """Relocate the coin based off x and y arguments."""

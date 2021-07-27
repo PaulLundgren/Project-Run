@@ -27,10 +27,13 @@ def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
     global pause
     pause = True
     # screen.fill(white)
-    largeText = pygame.font.Font('freesansbold.ttf', 30)
-    TitleSurf, TitleRect = text_objects("Store", largeText)
-    TitleRect.center = ((screen_width/2),(screen_height/8))
-    screen.blit(TitleSurf, TitleRect)
+    largeText = pygame.font.Font('freesansbold.ttf', 40)
+    text = largeText.render("Store", True, yellow, black)
+    textRect = text.get_rect()
+    # TitleSurf, TitleRect = text_objects("Store", largeText)
+    textRect.center = ((screen_width/2),(screen_height/8))
+    screen.blit(text, textRect)
+
     start_x = 150
     start_y = 350
     start_w = 100
@@ -73,6 +76,10 @@ def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
                     if(player.Coins >= 1):
                         player.permanent_increase_jump()
                         player.Coins = player.Coins - 1
+        
+        # updates coin ui while in store
+        show_ui(screen, "Health : " + str(player.HP), 540, 20)
+        show_ui(screen, "Coins : " + str(player.Coins), 100, 15)
 
         pygame.display.update()
         FramePerSec.tick(FPS)
