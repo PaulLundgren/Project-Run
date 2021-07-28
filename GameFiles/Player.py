@@ -19,10 +19,11 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (85, 85)) # scale the image
         self.width = screen_width
         self.height = screen_height
-        self.surface = pygame.Surface((30, 85)) # set the image's surface      
+        self.surface = pygame.Surface((40, 85)) # set the image's surface
         self.rect = self.surface.get_rect(center = (260, 430)) # set where the player spawns + it's coordinates relative to the screen
         self.flip_LEFT = False
         self.flip_RIGHT = True
+        self.speed = 3
         
 
         # vectors for the Player (will represent the movement physics of the Player object)
@@ -34,7 +35,7 @@ class Player(pygame.sprite.Sprite):
         self.Lives = 3
         self.Coins = 50
         self.Score = 0
-        self.jump_modifier = 5
+        self.jump_modifier = 1
         self.speed_modifier = 0
            
     
@@ -97,25 +98,36 @@ class Player(pygame.sprite.Sprite):
         if hits_list:
             # if the platform is invisible, then ignore it (this means that the platform is not intended to be drawn)
             if not hits_list[0].invisible:
-                print('hit something')
             
                 # player is standing or falling
                 if self.velocity.y >= 0:
-                
+                    print("object")
+                    print(hits_list[0].rect.top)
+                    print("player")
+                    print(self.position.y)
                     # repositions the player sprite onto the top of the platform
                     if self.position.y < hits_list[0].rect.bottom:
                         self.acceleration.y = 0
                         self.velocity.y = 0
                         self.position.y = hits_list[0].rect.top + 5
+                    elif(self.position.y + 5 > hits_list[0].rect.top):
+                        self.acceleration.x = 0
+                        self.velocity.x = 0
+                        #self.position.y = self.position.y + 5
+                        self.position.x = hits_list[0].rect.left - 50
 
-            
                 # player is jumping, there should be no ability to get onto a platform during this period
                 if self.velocity.y < 0:
-                
+                    if(self.position.y + 5 > hits_list[0].rect.top):
+                        self.acceleration.x = -ACCELERATION
+                        self.velocity.x = 0
+                        #self.position.y = self.position.y + 5
+                        self.position.x = hits_list[0].rect.left - 50
+
                     # collision causes player to move back slightly, and jump stops
-                    self.position.x -= 3
-                    self.velocity.y = 0
-                    self.acceleration.x = 0
+                   # self.position.x -= 3
+                   # self.velocity.y = 0
+                   # self.acceleration.x = 0
 
     def jump(self, hits_list):
         """A simple jumping mechanic for the player."""
@@ -132,3 +144,11 @@ class Player(pygame.sprite.Sprite):
 
     def permanent_increase_jump(self):
         self.jump_modifier = self.jump_modifier + 0.5
+
+    def inc_speed(self):
+        """Increase the speed at which the object moves."""
+        self.speed += 1
+
+    def slowdown(self):
+        """Slow the object down when the player comes into collision with an obstacle"""
+        self.speed = 3

@@ -1,7 +1,7 @@
 import pygame
 import sys
 from GameFiles.gameFunctions import *
-from GameFiles.ProjectRun import *
+#from GameFiles.ProjectRun import *
 white = (255, 255, 255)
 black = (0, 0, 0)
 red = (200, 0, 0)

@@ -74,7 +74,7 @@ bugs = pygame.sprite.Group()
 end_spawn = pygame.sprite.Group()
 
 # loading level
-current_level = 1
+current_level = 0
 
 
 tiles = []
