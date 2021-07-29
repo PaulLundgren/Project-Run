@@ -274,7 +274,7 @@ def game_loop():
 
         show_ui(screen, "Game Time: " + ("%d" % (seconds)), 510, 75)
 
-        score = (0.5 * player.Coins) + ( 0.05 * seconds) - ( 0.4 * player.HP)
+        score = (0.5 * player.total_coins) + ( 0.05 * seconds) - ( 0.4 * player.HP)
         score = round(score, 2)
         if score <= 0:
             score = 0
