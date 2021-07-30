@@ -28,21 +28,21 @@ def level_one():
     global level_value
     global level
     unpause()
-    level_value = 0
+    level_value = 1
     level = False
 
 def level_two():
     global level_value
     global level
     unpause()
-    level_value = 1
+    level_value = 2
     level = False
 
 def level_three():
     global level_value
     global level
     unpause()
-    level_value = 2
+    level_value = 3
     level = False
 def exitmenu():
     global level

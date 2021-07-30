@@ -59,7 +59,7 @@ font = pygame.font.SysFont('Futura', 30)
 ROWS = 10
 COLS_MAX = 1300
 TILE_SIZE = screen_height // ROWS
-current_level = 0
+current_level = 1
 
 
 level = []
@@ -222,10 +222,10 @@ while True:
         
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP and current_level < 3:
                 current_level += 1
 
-            if event.key == pygame.K_DOWN and current_level > 0:
+            if event.key == pygame.K_DOWN and current_level > 1:
                 current_level -= 1
 
             if event.key == pygame.K_LEFT:

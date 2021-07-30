@@ -9,18 +9,19 @@ import random
 import csv
 from pygame.locals import *
 from GameFiles.Background import *
-from Currency import *
+from GameFiles.Currency import *
 from GameFiles.Player import *
-from Platform import *
+from GameFiles.Platform import *
 from GameFiles.Floor import *
-from Bug import *
+from GameFiles.Bug import *
 from GameFiles.End import *
 from GameFiles.gameIntro import *
-from gameFunctions import *
+from GameFiles.gameFunctions import *
 from GameFiles.gamePause import *
 from GameFiles.Generator import *
 from GameFiles.gameShop import *
-from Level import Level
+from GameFiles.Level import *
+from GameFiles.Boss import *
 
 
 # initialize pygame modules
@@ -77,6 +78,7 @@ def gamecreation(level):
     obstacles = pygame.sprite.Group()
     bugs = pygame.sprite.Group()
     end_spawn = pygame.sprite.Group()
+    boss_spawn = pygame.sprite.Group()
 
     # loading level
     current_level = level
@@ -106,7 +108,7 @@ def gamecreation(level):
     # add Non-Generated sprites to respective groups (FIXME: rework this to include player as well)
     sprites.add(floor)
     platforms.add(floor)
-    gamevalues = [player, coins, platforms, obstacles, end_spawn, sprites]
+    gamevalues = [player, coins, platforms, obstacles, end_spawn, sprites, boss_spawn]
     return gamevalues
 
 # custom game over event; this occurs when the player's HP is 0
@@ -140,7 +142,7 @@ def game_quit():
     sys.exit()
 
 
-def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, current_level):
+def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, boss_spawn, current_level):
 
     global pause
     counter = 0 # keep track of the time in game (in milliseconds)
@@ -187,9 +189,12 @@ def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, current_l
 
 
             if event.type == GAMEOVER:
-                screen.fill((255,0,0))
+                screen.fill((255, 0, 0))
+                font = pygame.font.SysFont('Futura', 100)
+                image = font.render("GAME OVER", True, (0, 0, 0))
+                screen.blit(image, (screen_width // 2 - 220, screen_height // 2 - 100))
                 pygame.display.update()
-                time.sleep(1)
+                time.sleep(3)
                 player.playerDeath()
                 pygame.event.clear()
                 player.HP = 3
@@ -216,9 +221,12 @@ def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, current_l
                         sprite.slowdown()
 
             if event.type == WIN:
-                screen.fill((0,255,0))
+                screen.fill((0, 255, 0))
+                font = pygame.font.SysFont('Futura', 100)
+                image = font.render("LEVEL COMPLETE", True, (0, 0, 0))
+                screen.blit(image, (screen_width // 2 - 310, screen_height // 2 - 100))
                 pygame.display.update()
-                time.sleep(1)
+                time.sleep(3)
                 game_quit()
 
         # draw the background to the screen (NOTE: background is not included in sprite since the background is NOT a sprite)
@@ -252,6 +260,9 @@ def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, current_l
         # collision b/w the end sprite + player
         end_hit = pygame.sprite.spritecollide(player, end_spawn, False)
 
+        # collision b/w the boss sprite + player
+        boss_hit = pygame.sprite.spritecollide(player, boss_spawn, False)
+
 
         # remove the coins that the player has come in contact with
         if coins_hit:
@@ -263,14 +274,18 @@ def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, current_l
             pygame.event.post(slowdown)
             speed_offset = speed_offset + 20000
 
-
-        # when the player's HP goes to 0, post game over event
-        if player.HP == 0:
+        # once the boss is hit, the game is over, push back to the main menu
+        if boss_hit:
             pygame.event.post(game_over)
 
-        # after 90 seconds, spawn the end condition for the level
-        if counter > 90000 and not isEnd:
+
+        # when the player's HP goes to 0, spawn the boss
+        if player.HP == 0 and not isEnd:
             isEnd = True
+            boss = Boss(screen_height)
+            sprites.add(boss)
+            boss_spawn.add(boss)
+
 
         # player wins when they collide with the end sprite
         if end_hit:
@@ -302,16 +317,16 @@ def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, current_l
 # Game Loop
 def main():
     running = True
-    pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'music2.wav')))
+    pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'music2.wav')), -1)
     while running == True :
         # pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'music2.wav')))
         current_level = game_intro(screen, screen_width, screen_height, FramePerSec, FPS)
         gamevalues = gamecreation(current_level) # player, coins, platforms, obstacles, end_spawn, sprites
-        results = game_loop(gamevalues[0], gamevalues[1], gamevalues[2], gamevalues[3], gamevalues[4], gamevalues[5], current_level)
+        results = game_loop(gamevalues[0], gamevalues[1], gamevalues[2], gamevalues[3], gamevalues[4], gamevalues[5], gamevalues[6], current_level)
         while results[1]:
             gamevalues = gamecreation(current_level)
             gamevalues[0] = results[0]
-            results = game_loop(gamevalues[0], gamevalues[1], gamevalues[2], gamevalues[3], gamevalues[4], gamevalues[5], current_level)
+            results = game_loop(gamevalues[0], gamevalues[1], gamevalues[2], gamevalues[3], gamevalues[4], gamevalues[5], gamevalues[6], current_level)
 
 
 

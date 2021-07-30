@@ -1,8 +1,8 @@
 
 from sys import platform
-from Platform import Platform
-from Currency import *
-from Bug import Bug
+from GameFiles.Platform import *
+from GameFiles.Currency import *
+from GameFiles.Bug import *
 
 
 
