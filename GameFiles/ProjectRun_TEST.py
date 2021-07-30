@@ -188,8 +188,8 @@ def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, boss_spaw
                     if(pauselist[1]):
                         player.Lives = 3
                         return player, False
-                if event.key == pygame.K_p:
-                    game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player)
+                #if event.key == pygame.K_p:
+                   # game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player)
 
 
             if event.type == GAMEOVER:
@@ -231,7 +231,10 @@ def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, boss_spaw
                 screen.blit(image, (screen_width // 2 - 310, screen_height // 2 - 100))
                 pygame.display.update()
                 time.sleep(3)
-                game_quit()
+                #game_quit()
+                player.HP = 3
+                player.Lives = 3
+                return player, False
 
         # draw the background to the screen (NOTE: background is not included in sprite since the background is NOT a sprite)
         background.update()

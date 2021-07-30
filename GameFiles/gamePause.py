@@ -1,6 +1,7 @@
 import pygame
 import sys
 from GameFiles.gameFunctions import *
+from GameFiles.gameShop import *
 #from GameFiles.ProjectRun import *
 white = (255, 255, 255)
 yellow = (255, 255, 0)
@@ -21,6 +22,8 @@ def game_quit():
     pause = False
     global exit
     exit = True
+#def callshop():
+    # game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player)
 
 def game_pause(screen, screen_width, screen_height, FramePerSec, FPS):
     # screen.fill(white)
@@ -36,7 +39,6 @@ def game_pause(screen, screen_width, screen_height, FramePerSec, FPS):
     textRect = text.get_rect()
     textRect.center = (300,300)
     screen.blit(text, textRect)
-    # 
     w = 100
     h = 50
     start_x = 150
@@ -51,6 +53,7 @@ def game_pause(screen, screen_width, screen_height, FramePerSec, FPS):
         # x-cord + rect.width > mouse pos x > x-cord and y-cord + rect.height > mouse pos y > y-cord
         button(screen, "Continue", start_x, start_y, w, h, green, bright_green, unpause)
         button(screen, "Quit", exit_x, exit_y, w, h, red, bright_red, game_quit)
+        button()
         pygame.display.update()
         FramePerSec.tick(FPS)
     return pause, exit
