@@ -14,7 +14,7 @@ yellow = (255,255,0)
 dark_yellow = (200,200,0)
 darker_yellow = (150,150,0)
 pause = True
-exit = False
+exitgame = False
 global shopscreen
 global shopwidth
 global shopheight
@@ -29,10 +29,12 @@ def unpause():
 def game_quit():
     global pause
     pause = False
-    global exit
-    exit = True
+    global exitgame
+    exitgame = True
 def callshop():
-     game_shop(shopscreen, shopwidth, shopheight, shopFPS, shopSPF, shopPlayer)
+     if(game_shop(shopscreen, shopwidth, shopheight, shopFPS, shopSPF, shopPlayer)):
+         game_quit()
+
 
 def game_pause(screen, screen_width, screen_height, FramePerSec, FPS, player):
     # screen.fill(white)
@@ -77,4 +79,4 @@ def game_pause(screen, screen_width, screen_height, FramePerSec, FPS, player):
         button(screen, "Shop", exit_x -100, exit_y, w, h, dark_yellow, yellow, callshop)
         pygame.display.update()
         FramePerSec.tick(FPS)
-    return pause, exit
+    return pause, exitgame

@@ -13,16 +13,19 @@ yellow = (255,255,0)
 dark_yellow = (200,200,0)
 darker_yellow = (150,150,0)
 pause = True
-
+exitgame = False
 def unpause():
     global pause
     pause = False
 
 def game_quit():
-    pygame.quit()
-    sys.exit()
+    global exitgame
+    exitgame = True
+    global pause
+    pause = False
 def gamenothing():
     return
+
 
 def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
     #def item_one():
@@ -88,4 +91,4 @@ def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
 
         pygame.display.update()
         FramePerSec.tick(FPS)
-    return
+    return exitgame
