@@ -14,12 +14,13 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
 
         # variables for the player sprite
-        # self.image = pygame.image.load("player.png")
+        self.image = pygame.image.load("player.png")
         self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'player.png')).convert_alpha()
         self.image = pygame.transform.scale(self.image, (85, 85)) # scale the image
         self.width = screen_width
         self.height = screen_height
         self.surface = pygame.Surface((40, 85)) # set the image's surface
+        self.surface.fill((0,0,0))
         self.rect = self.surface.get_rect(center = (260, 430)) # set where the player spawns + it's coordinates relative to the screen
         self.flip_LEFT = False
         self.flip_RIGHT = True
@@ -113,19 +114,32 @@ class Player(pygame.sprite.Sprite):
                         self.acceleration.y = 0
                         self.velocity.y = 0
                         self.position.y = hits_list[0].rect.top + 5
-                    elif(self.position.y + 5 > hits_list[0].rect.top):
+
+                    elif(self.position.y > hits_list[0].rect.top) and (self.position.x < hits_list[0].rect.left):
+                        self.acceleration.x = -ACCELERATION
+                        self.velocity.x = -10
+                        #self.position.y = self.position.y + 5
+                        self.position.x = hits_list[0].rect.left - 50
+
+                    elif(self.position.y > hits_list[0].rect.top) and (self.position.x > hits_list[0].rect.right):
                         self.acceleration.x = 0
                         self.velocity.x = 0
                         #self.position.y = self.position.y + 5
-                        self.position.x = hits_list[0].rect.left - 50
+                        self.position.x = hits_list[0].rect.right + 20
 
                 # player is jumping, there should be no ability to get onto a platform during this period
                 if self.velocity.y < 0:
                     if(self.position.y + 5 > hits_list[0].rect.top):
                         self.acceleration.x = -ACCELERATION
-                        self.velocity.x = 0
+                        self.velocity.x = -10
                         #self.position.y = self.position.y + 5
                         self.position.x = hits_list[0].rect.left - 50
+
+                    elif(self.position.y > hits_list[0].rect.top) and (self.position.x > hits_list[0].rect.right):
+                        self.acceleration.x = 0
+                        self.velocity.x = 0
+                        #self.position.y = self.position.y + 5
+                        self.position.x = hits_list[0].rect.right + 20
 
                     # collision causes player to move back slightly, and jump stops
                    # self.position.x -= 3
