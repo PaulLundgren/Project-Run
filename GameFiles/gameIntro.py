@@ -3,6 +3,7 @@ import sys
 from GameFiles.gameFunctions import *
 from GameFiles.ProjectRun import *
 white = (255, 255, 255)
+yellow = (255, 255, 0)
 black = (0, 0, 0)
 red = (200, 0, 0)
 green = (0, 200, 0)
@@ -23,6 +24,11 @@ def game_intro(screen, screen_width, screen_height, FramePerSec, FPS):
     TitleSurf, TitleRect = text_objects("Project Run", largeText)
     TitleRect.center = ((screen_width/2),(screen_height/2))
     screen.blit(TitleSurf, TitleRect)
+    score_text = pygame.font.Font("freesansbold.ttf", 20)
+    text = score_text.render("P Key to Enter Store / Space Key to Jump / Esc Key to Pause", True, yellow, black)
+    textRect = text.get_rect()
+    textRect.center = (320,300)
+    screen.blit(text, textRect)
     start_x = 150
     start_y = 350
     start_w = 100

@@ -61,8 +61,9 @@ def downButton (screen, message, x, y, w, h, default_color):
     # screen.blit(textSurf, textRect)
 
 
-def show_ui(screen, message, x, y):
-    score_text = pygame.font.Font("freesansbold.ttf", 27)
+def show_ui(screen, message, x, y, font_size = None):
+    font_size = font_size if font_size != None else 25
+    score_text = pygame.font.Font("freesansbold.ttf", font_size)
     text = score_text.render(message, True, green, black)
     textRect = text.get_rect()
     textRect.center = (x,y)
