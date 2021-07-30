@@ -183,7 +183,11 @@ def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, boss_spaw
                     pause = True
                    # pause_offset = FramePerSec.get_time()
                     # pygame.time.wait()
-                    pause = game_pause(screen, screen_width, screen_height, FramePerSec, FPS)
+                    pauselist = game_pause(screen, screen_width, screen_height, FramePerSec, FPS)
+                    pause = pauselist[0]
+                    if(pauselist[1]):
+                        player.Lives = 3
+                        return player, False
                 if event.key == pygame.K_p:
                     game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player)
 

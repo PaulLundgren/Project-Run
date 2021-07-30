@@ -10,14 +10,17 @@ green = (0, 200, 0)
 bright_red = (255, 0, 0)
 bright_green = (0, 255, 0)
 pause = True
+exit = False
 
 def unpause():
     global pause
     pause = False
 
 def game_quit():
-    pygame.quit()
-    sys.exit()
+    global pause
+    pause = False
+    global exit
+    exit = True
 
 def game_pause(screen, screen_width, screen_height, FramePerSec, FPS):
     # screen.fill(white)
@@ -50,4 +53,4 @@ def game_pause(screen, screen_width, screen_height, FramePerSec, FPS):
         button(screen, "Quit", exit_x, exit_y, w, h, red, bright_red, game_quit)
         pygame.display.update()
         FramePerSec.tick(FPS)
-    return pause
+    return pause, exit

@@ -18,7 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (85, 85)) # scale the image
         self.width = screen_width
         self.height = screen_height
-        self.surface = pygame.Surface((40, 85)) # set the image's surface
+        self.surface = pygame.Surface((30, 85)) # set the image's surface
         self.surface.fill((0,0,0))
         self.rect = self.surface.get_rect(center = (260, 430)) # set where the player spawns + it's coordinates relative to the screen
         self.flip_LEFT = False
@@ -153,8 +153,8 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self, surface):
         """Draws the player to the screen."""
-        surface.blit(self.image, (self.rect))
-
+        #surface.blit(self.image, (self.rect))
+        surface.blit(self.surface, (self.rect))
     def permanent_increase_speed(self):
         self.speed_modifier = self.speed_modifier + 0.1
 
