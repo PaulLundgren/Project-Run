@@ -33,7 +33,7 @@ class Player(pygame.sprite.Sprite):
         # Player attributes, i.e money, HP, Lives
         self.HP = 3
         self.Lives = 3
-        self.Coins = 0
+        self.Coins = 10
         self.total_coins = 0
         self.Score = 0
         self.jump_modifier = 1

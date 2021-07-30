@@ -21,6 +21,8 @@ def unpause():
 def game_quit():
     pygame.quit()
     sys.exit()
+def gamenothing():
+    return
 
 def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
     #def item_one():
@@ -34,11 +36,11 @@ def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
     textRect.center = ((screen_width/2),(screen_height/8))
     screen.blit(text, textRect)
 
-    start_x = 150
+    start_x = 125
     start_y = 350
     start_w = 100
     start_h = 50
-    exit_x = 350
+    exit_x = 375
     exit_y = 350
     exit_w = 100
     exit_h = 50
@@ -50,6 +52,8 @@ def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
     item2_y = 160
     item3_x = 100
     item3_y = 220
+    w = 100
+    h = 50
     while pause:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -58,6 +62,7 @@ def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
         # x-cord + rect.width > mouse pos x > x-cord and y-cord + rect.height > mouse pos y > y-cord
             button(screen, "Continue", start_x, start_y, start_w, start_h, green, bright_green, unpause)
             button(screen, "Quit", exit_x, exit_y, exit_w, exit_h, red, bright_red, game_quit)
+            button(screen, "Shop", exit_x -125, exit_y, w, h, yellow, yellow, gamenothing)
             if(booleanButton(screen, "Buy a Heart = 50", item1_x, item1_y, item_w, item_h, yellow, dark_yellow)):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     downButton(screen, "Buy a Heart = 50", item1_x, item1_y, item_w, item_h, darker_yellow)

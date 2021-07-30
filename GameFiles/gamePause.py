@@ -10,8 +10,17 @@ red = (200, 0, 0)
 green = (0, 200, 0)
 bright_red = (255, 0, 0)
 bright_green = (0, 255, 0)
+yellow = (255,255,0)
+dark_yellow = (200,200,0)
+darker_yellow = (150,150,0)
 pause = True
 exit = False
+global shopscreen
+global shopwidth
+global shopheight
+global shopFPS
+global shopSPF
+global shopPlayer
 
 def unpause():
     global pause
@@ -22,11 +31,23 @@ def game_quit():
     pause = False
     global exit
     exit = True
-#def callshop():
-    # game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player)
+def callshop():
+     game_shop(shopscreen, shopwidth, shopheight, shopFPS, shopSPF, shopPlayer)
 
-def game_pause(screen, screen_width, screen_height, FramePerSec, FPS):
+def game_pause(screen, screen_width, screen_height, FramePerSec, FPS, player):
     # screen.fill(white)
+    global shopscreen
+    shopscreen = screen
+    global shopwidth
+    shopwidth = screen_width
+    global shopheight
+    shopheight = screen_height
+    global shopFPS
+    shopFPS = FramePerSec
+    global shopSPF
+    shopSPF = FPS
+    global shopPlayer
+    shopPlayer = player
     global pause
     pause = True
     largeText = pygame.font.Font('freesansbold.ttf', 70)
@@ -35,10 +56,10 @@ def game_pause(screen, screen_width, screen_height, FramePerSec, FPS):
     screen.blit(TitleSurf, TitleRect)
     # 
     score_text = pygame.font.Font("freesansbold.ttf", 26)
-    text = score_text.render("P Key to Enter Store / Space Key to Jump", True, yellow, black)
-    textRect = text.get_rect()
-    textRect.center = (300,300)
-    screen.blit(text, textRect)
+    # text = score_text.render("P Key to Enter Store / Space Key to Jump", True, yellow, black)
+    #textRect = text.get_rect()
+    #textRect.center = (300,300)
+    #screen.blit(text, textRect)
     w = 100
     h = 50
     start_x = 150
@@ -51,9 +72,9 @@ def game_pause(screen, screen_width, screen_height, FramePerSec, FPS):
                 pygame.quit()
                 quit()
         # x-cord + rect.width > mouse pos x > x-cord and y-cord + rect.height > mouse pos y > y-cord
-        button(screen, "Continue", start_x, start_y, w, h, green, bright_green, unpause)
-        button(screen, "Quit", exit_x, exit_y, w, h, red, bright_red, game_quit)
-        button()
+        button(screen, "Continue", start_x - 25, start_y, w, h, green, bright_green, unpause)
+        button(screen, "Quit", exit_x + 25, exit_y, w, h, red, bright_red, game_quit)
+        button(screen, "Shop", exit_x -100, exit_y, w, h, dark_yellow, yellow, callshop)
         pygame.display.update()
         FramePerSec.tick(FPS)
     return pause, exit
