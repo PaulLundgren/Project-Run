@@ -287,7 +287,7 @@ def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, boss_spaw
 
 
         # when the player's HP goes to 0, spawn the boss
-        if player.HP == 0 and not isEnd:
+        if player.HP <= 0 and not isEnd:
             isEnd = True
             boss = Boss(screen_height)
             sprites.add(boss)

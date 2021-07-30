@@ -112,7 +112,7 @@ class Player(pygame.sprite.Sprite):
                     if self.position.y < hits_list[0].rect.bottom:
                         self.acceleration.y = 0
                         self.velocity.y = 0
-                        self.position.y = hits_list[0].rect.top + 5
+                        self.position.y = hits_list[0].rect.top + 3
 
                     elif(self.position.y > hits_list[0].rect.top) and (self.position.x < hits_list[0].rect.left):
                         self.acceleration.x = -ACCELERATION
@@ -153,8 +153,8 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self, surface):
         """Draws the player to the screen."""
-        #surface.blit(self.image, (self.rect))
-        surface.blit(self.surface, (self.rect))
+        surface.blit(self.image, (self.rect))
+        #surface.blit(self.surface, (self.rect))
     def permanent_increase_speed(self):
         self.speed_modifier = self.speed_modifier + 0.1
 

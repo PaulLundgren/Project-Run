@@ -192,7 +192,6 @@ def gameedit():
                 if i.draw():
                     tile = count
 
-            pygame.draw.rect(screen, WHITE, tile_list[tile].rect, 3)
 
 
 
