@@ -22,8 +22,11 @@ from GameFiles.Generator import *
 from GameFiles.gameShop import *
 from Level import Level
 
+
 # initialize pygame modules
 pygame.init()
+# set the window caption for our game
+pygame.display.set_caption("Project Run")
 
 # Assign FPS value
 FPS = 60
@@ -46,69 +49,65 @@ bright_red = (255, 0, 0)
 bright_green = (0, 255, 0)
 
 # image things
-images = []
-
-coin = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'coin.png')).convert_alpha()
-coin = pygame.transform.scale(coin, (TILE_SIZE, TILE_SIZE))
-bug = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'bug.png')).convert_alpha()
-bug = pygame.transform.scale(bug, (TILE_SIZE, TILE_SIZE))
-floor = pygame.Surface((TILE_SIZE, TILE_SIZE))
-floor.fill((255,0,0))
-platform = pygame.Surface((TILE_SIZE, TILE_SIZE))
-platform.fill((255,255,0))
-end = pygame.Surface((TILE_SIZE, TILE_SIZE))
-end.fill((255, 0, 255))
-
-images.append(coin)
-images.append(bug)
-images.append(floor)
-images.append(platform)
-images.append(end)
-
-# group creation
-sprites = pygame.sprite.Group()
-coins = pygame.sprite.Group()
-platforms = pygame.sprite.Group()
-obstacles = pygame.sprite.Group()
-bugs = pygame.sprite.Group()
-end_spawn = pygame.sprite.Group()
-
-# loading level
-current_level = 0
 
 
-tiles = []
-for row in range(ROWS):
-    row = [-1] * COLS
-    tiles.append(row)
+def gamecreation(level):
+    images = []
+    coin = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'coin.png')).convert_alpha()
+    coin = pygame.transform.scale(coin, (TILE_SIZE, TILE_SIZE))
+    bug = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'bug.png')).convert_alpha()
+    bug = pygame.transform.scale(bug, (TILE_SIZE, TILE_SIZE))
+    floor = pygame.Surface((TILE_SIZE, TILE_SIZE))
+    floor.fill((255,0,0))
+    platform = pygame.Surface((TILE_SIZE, TILE_SIZE))
+    platform.fill((255,255,0))
+    end = pygame.Surface((TILE_SIZE, TILE_SIZE))
+    end.fill((255, 0, 255))
 
-with open(f"level_{current_level}.csv", newline="") as csv_file:
-    reader = csv.reader(csv_file, delimiter = ',')
-    for x, row in enumerate(reader):
-        for y, tile in enumerate(row):
-            tiles[x][y] = int(tile)
+    images.append(coin)
+    images.append(bug)
+    images.append(floor)
+    images.append(platform)
+    images.append(end)
 
-level = Level()
-level.process(tiles, images, coins, platforms, obstacles, sprites, end_spawn, TILE_SIZE)
+    # group creation
+    sprites = pygame.sprite.Group()
+    coins = pygame.sprite.Group()
+    platforms = pygame.sprite.Group()
+    obstacles = pygame.sprite.Group()
+    bugs = pygame.sprite.Group()
+    end_spawn = pygame.sprite.Group()
+
+    # loading level
+    current_level = level
 
 
-# set the window caption for our game
-pygame.display.set_caption("Project Run")
+    tiles = []
+    for row in range(ROWS):
+        row = [-1] * COLS
+        tiles.append(row)
 
-# background music for the game
-# pygame.mixer.Sound.play(pygame.mixer.Sound("music2.wav")) # play sound effect for hitting a coin
-#pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'music2.wav')))
+    with open(f"level_{current_level}.csv", newline="") as csv_file:
+        reader = csv.reader(csv_file, delimiter = ',')
+        for x, row in enumerate(reader):
+            for y, tile in enumerate(row):
+                tiles[x][y] = int(tile)
+
+    level = Level()
+    level.process(tiles, images, coins, platforms, obstacles, sprites, end_spawn, TILE_SIZE)
 
 
+    # Sprite creation
 
-# Sprite creation
-player = Player(screen_width, screen_height)
-floor = Floor(screen_width, screen_height)
-end = End(screen_width, screen_height)
+    player = Player(screen_width, screen_height)
+    floor = Floor(screen_width, screen_height)
+    end = End(screen_width, screen_height)
 
-# add Non-Generated sprites to respective groups (FIXME: rework this to include player as well)
-sprites.add(floor)
-platforms.add(floor)
+    # add Non-Generated sprites to respective groups (FIXME: rework this to include player as well)
+    sprites.add(floor)
+    platforms.add(floor)
+    gamevalues = [player, coins, platforms, obstacles, end_spawn, sprites]
+    return gamevalues
 
 # custom game over event; this occurs when the player's HP is 0
 GAMEOVER = USEREVENT + 1
@@ -141,7 +140,7 @@ def game_quit():
     sys.exit()
 
 
-def game_loop():
+def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, current_level):
 
     global pause
     counter = 0 # keep track of the time in game (in milliseconds)
@@ -191,7 +190,15 @@ def game_loop():
                 screen.fill((255,0,0))
                 pygame.display.update()
                 time.sleep(1)
-                game_quit()
+                player.playerDeath()
+                pygame.event.clear()
+                player.HP = 3
+                player.Coins = 0
+                if(player.Lives > 1):
+                    player.Lives = player.Lives - 1
+                    return player, True
+                player.Lives = 3
+                return player, False
 
             if event.type == SPEED:
                 background.inc_speed()
@@ -274,8 +281,10 @@ def game_loop():
 
         show_ui(screen, "Game Time: " + ("%d" % (seconds)), 510, 75)
 
-        score = (0.5 * player.total_coins) + ( 0.05 * seconds) - ( 0.4 * player.HP)
+        # score = (0.5 * player.total_coins) + ( 0.05 * seconds) - ( 0.4 * player.HP)
+        score = (1 * player.total_coins) + ( 0.4 * player.HP) + ( 0.05 * seconds)
         score = round(score, 2)
+        score = score + 10 * player.Lives
         if score <= 0:
             score = 0
         player.Score = score
@@ -292,9 +301,19 @@ def game_loop():
 
 # Game Loop
 def main():
+    running = True
     pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'music2.wav')))
-    game_intro(screen, screen_width, screen_height, FramePerSec, FPS)
-    game_loop()
+    while running == True :
+        # pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'music2.wav')))
+        current_level = game_intro(screen, screen_width, screen_height, FramePerSec, FPS)
+        gamevalues = gamecreation(current_level) # player, coins, platforms, obstacles, end_spawn, sprites
+        results = game_loop(gamevalues[0], gamevalues[1], gamevalues[2], gamevalues[3], gamevalues[4], gamevalues[5], current_level)
+        while results[1]:
+            gamevalues = gamecreation(current_level)
+            gamevalues[0] = results[0]
+            results = game_loop(gamevalues[0], gamevalues[1], gamevalues[2], gamevalues[3], gamevalues[4], gamevalues[5], current_level)
+
+
 
 
 if __name__ == "__main__":
