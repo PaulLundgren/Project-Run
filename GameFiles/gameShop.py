@@ -14,6 +14,7 @@ dark_yellow = (200,200,0)
 darker_yellow = (150,150,0)
 pause = True
 exitgame = False
+
 def unpause():
     global pause
     pause = False
@@ -23,6 +24,7 @@ def game_quit():
     exitgame = True
     global pause
     pause = False
+
 def gamenothing():
     return
 
@@ -72,18 +74,18 @@ def game_shop(screen, screen_width, screen_height, FramePerSec, FPS, player):
                     if(player.Coins >= 50):
                         player.HP = player.HP + 1
                         player.Coins = player.Coins - 50
-            if(booleanButton(screen, "increase speed = 1", item2_x, item2_y, item_w, item_h, yellow, dark_yellow)):
+            if(booleanButton(screen, "increase speed = 5", item2_x, item2_y, item_w, item_h, yellow, dark_yellow)):
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    downButton(screen, "increase speed = 1", item2_x, item2_y, item_w, item_h, darker_yellow)
-                    if(player.Coins >= 1):
+                    downButton(screen, "increase speed = 5", item2_x, item2_y, item_w, item_h, darker_yellow)
+                    if(player.Coins >= 5):
                         player.permanent_increase_speed()
-                        player.Coins = player.Coins - 1
-            if(booleanButton(screen, "increase jump = 1", item3_x, item3_y, item_w, item_h, yellow, dark_yellow)):
+                        player.Coins = player.Coins - 5
+            if(booleanButton(screen, "increase jump = 5", item3_x, item3_y, item_w, item_h, yellow, dark_yellow)):
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    downButton(screen, "increase jump = 1", item3_x, item3_y, item_w, item_h, darker_yellow)
-                    if(player.Coins >= 1):
+                    downButton(screen, "increase jump = 5", item3_x, item3_y, item_w, item_h, darker_yellow)
+                    if(player.Coins >= 5):
                         player.permanent_increase_jump()
-                        player.Coins = player.Coins - 1
+                        player.Coins = player.Coins - 5
         
         # updates coin ui while in store
         show_ui(screen, "Health : " + str(player.HP), 540, 20)
