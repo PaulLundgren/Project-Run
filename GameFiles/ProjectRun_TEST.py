@@ -306,7 +306,10 @@ def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, boss_spaw
 
 
         show_ui(screen, "Coins : " + str(player.Coins), 100, 15)
-        show_ui(screen, "Health : " + str(player.HP), 540, 20)
+        if(player.HP <= 0):
+            show_ui(screen, "Health : " + str(0), 540, 20)
+        else:
+            show_ui(screen, "Health : " + str(player.HP), 540, 20)
         show_ui(screen, "Score : " + str(score), 100, 60)
         
         # update the display

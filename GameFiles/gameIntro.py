@@ -1,6 +1,7 @@
 import pygame
 import sys
 from GameFiles.gameFunctions import *
+from GameFiles.LevelEditor import *
 #from GameFiles.ProjectRun import *
 white = (255, 255, 255)
 yellow = (255, 255, 0)
@@ -9,6 +10,8 @@ red = (200, 0, 0)
 green = (0, 200, 0)
 bright_red = (255, 0, 0)
 bright_green = (0, 255, 0)
+yellow = (255,255,0)
+dark_yellow = (200,200,0)
 intro = True
 level = False
 level_value = 0
@@ -47,6 +50,8 @@ def level_three():
 def exitmenu():
     global level
     level = False
+def leveleditting():
+    gameedit()
 
 def game_intro(screen, screen_width, screen_height, FramePerSec, FPS):
     screen.fill(white)
@@ -97,7 +102,8 @@ def game_intro(screen, screen_width, screen_height, FramePerSec, FPS):
                 button(screen, "level 1", 50 + start_x/2, start_y - 100, start_w, start_h, green, bright_green, level_one)
                 button(screen, "level 2", 50 + start_x + start_x/2 , start_y - 100, start_w, start_h, green, bright_green, level_two)
                 button(screen, "level 3", 50 + start_x * 2 + start_x/2, start_y - 100, start_w, start_h, green, bright_green, level_three)
-                button(screen, "Back", exit_x - 80, exit_y, exit_w, exit_h, red, bright_red, exitmenu)
+                button(screen, "Back", exit_x, exit_y, exit_w, exit_h, red, bright_red, exitmenu)
+                button(screen, "Edit", start_x, start_y, exit_w, exit_h, dark_yellow, yellow, leveleditting)
                 pygame.display.update()
             FramePerSec.tick(FPS)
     intro = True

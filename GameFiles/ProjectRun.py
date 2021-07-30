@@ -1,9 +1,12 @@
 """Side-scrolling game. Run away from your project leader and push your commits to repo."""
 
+
+
 import pygame
 import sys
 import time
 import random
+import csv
 from pygame.locals import *
 from GameFiles.Background import *
 from GameFiles.Currency import *
@@ -13,13 +16,17 @@ from GameFiles.Floor import *
 from GameFiles.Bug import *
 from GameFiles.End import *
 from GameFiles.gameIntro import *
-from gameFunctions import *
+from GameFiles.gameFunctions import *
 from GameFiles.gamePause import *
 from GameFiles.Generator import *
 from GameFiles.gameShop import *
+from GameFiles.Level import *
+
 
 # initialize pygame modules
 pygame.init()
+# set the window caption for our game
+pygame.display.set_caption("Project Run")
 
 # Assign FPS value
 FPS = 60
@@ -29,6 +36,9 @@ FramePerSec = pygame.time.Clock()
 screen_width = 640
 screen_height = 480
 screen = pygame.display.set_mode((screen_width, screen_height))
+ROWS = 10
+COLS = 1300
+TILE_SIZE = screen_height // ROWS
 
 #colors
 white = (255, 255, 255)
@@ -38,31 +48,66 @@ green = (0, 200, 0)
 bright_red = (255, 0, 0)
 bright_green = (0, 255, 0)
 
+# image things
 
 
-# set the window caption for our game
-pygame.display.set_caption("Project Run")
+def gamecreation(level):
+    images = []
+    coin = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'coin.png')).convert_alpha()
+    coin = pygame.transform.scale(coin, (TILE_SIZE, TILE_SIZE))
+    bug = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'bug.png')).convert_alpha()
+    bug = pygame.transform.scale(bug, (TILE_SIZE, TILE_SIZE))
+    floor = pygame.Surface((TILE_SIZE, TILE_SIZE))
+    floor.fill((255,0,0))
+    platform = pygame.Surface((TILE_SIZE, TILE_SIZE))
+    platform.fill((255,255,0))
+    end = pygame.Surface((TILE_SIZE, TILE_SIZE))
+    end.fill((255, 0, 255))
 
-# background music for the game
-# pygame.mixer.Sound.play(pygame.mixer.Sound("music2.wav")) # play sound effect for hitting a coin
-#pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'music2.wav')))
+    images.append(coin)
+    images.append(bug)
+    images.append(floor)
+    images.append(platform)
+    images.append(end)
 
-# group creation
-sprites = pygame.sprite.Group()
-coins = pygame.sprite.Group()
-platforms = pygame.sprite.Group()
-obstacles = pygame.sprite.Group()
-bugs = pygame.sprite.Group()
-end_spawn = pygame.sprite.Group()
+    # group creation
+    sprites = pygame.sprite.Group()
+    coins = pygame.sprite.Group()
+    platforms = pygame.sprite.Group()
+    obstacles = pygame.sprite.Group()
+    bugs = pygame.sprite.Group()
+    end_spawn = pygame.sprite.Group()
 
-# Sprite creation
-player = Player(screen_width, screen_height)
-floor = Floor(screen_width, screen_height)
-end = End(screen_width, screen_height)
+    # loading level
+    current_level = level
 
-# add Non-Generated sprites to respective groups (FIXME: rework this to include player as well)
-sprites.add(floor)
-platforms.add(floor)
+
+    tiles = []
+    for row in range(ROWS):
+        row = [-1] * COLS
+        tiles.append(row)
+
+    with open(f"level_{current_level}.csv", newline="") as csv_file:
+        reader = csv.reader(csv_file, delimiter = ',')
+        for x, row in enumerate(reader):
+            for y, tile in enumerate(row):
+                tiles[x][y] = int(tile)
+
+    level = Level()
+    level.process(tiles, images, coins, platforms, obstacles, sprites, end_spawn, TILE_SIZE)
+
+
+    # Sprite creation
+
+    player = Player(screen_width, screen_height)
+    floor = Floor(screen_width, screen_height)
+    end = End(screen_width, screen_height)
+
+    # add Non-Generated sprites to respective groups (FIXME: rework this to include player as well)
+    sprites.add(floor)
+    platforms.add(floor)
+    gamevalues = [player, coins, platforms, obstacles, end_spawn, sprites]
+    return gamevalues
 
 # custom game over event; this occurs when the player's HP is 0
 GAMEOVER = USEREVENT + 1
@@ -71,9 +116,6 @@ game_over = pygame.event.Event(GAMEOVER)
 # custom event that increases the speed of the images
 SPEED = USEREVENT + 2
 speed_event = pygame.event.Event(SPEED)
-# custom event that respawns sprites
-REDRAW = USEREVENT + 3
-redraw_event = pygame.event.Event(REDRAW)
 
 # custom event that happens when the player reaches the end
 WIN = USEREVENT + 4
@@ -88,9 +130,9 @@ background = Background(screen_width, screen_height)
 
 
 # generate items outside game loop()
-coin_gen(coins, sprites, screen_width, screen_height)
-plat_gen(platforms, sprites, screen_width, screen_height)
-bug_gen(bugs, obstacles, sprites, screen_width, screen_height)
+# coin_gen(coins, sprites, screen_width, screen_height)
+# plat_gen(platforms, sprites, screen_width, screen_height)
+# bug_gen(bugs, obstacles, sprites, screen_width, screen_height)
 
 
 def game_quit():
@@ -98,7 +140,7 @@ def game_quit():
     sys.exit()
 
 
-def game_loop():
+def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, current_level):
 
     global pause
     counter = 0 # keep track of the time in game (in milliseconds)
@@ -114,7 +156,7 @@ def game_loop():
     pause = False
     time_since_pause = 0
     counter += FramePerSec.get_time() - offset
-    redraw_offset = 8000
+    redraw_offset = 12000
     speed_offset = 20000
     #redraw_counter = FramePerSec.get_time() - offset
     #speed_counter = FramePerSec.get_time() - offset
@@ -126,9 +168,7 @@ def game_loop():
         if counter > speed_offset: # after 20 seconds in game, the player will speed up
             pygame.event.post(speed_event)
             speed_offset = speed_offset + 20000
-        if counter > redraw_offset: # after 8 seconds in game, the next set of obstacles will be drawn
-            pygame.event.post(redraw_event)
-            redraw_offset = redraw_offset + 8000
+        
         for event in pygame.event.get():
             if event.type == QUIT:  # constant QUIT comes from pygames.local import statement
                 game_quit()
@@ -150,7 +190,15 @@ def game_loop():
                 screen.fill((255,0,0))
                 pygame.display.update()
                 time.sleep(1)
-                game_quit()
+                player.playerDeath()
+                pygame.event.clear()
+                player.HP = 3
+                player.Coins = 0
+                if(player.Lives > 1):
+                    player.Lives = player.Lives - 1
+                    return player, True
+                player.Lives = 3
+                return player, False
 
             if event.type == SPEED:
                 background.inc_speed()
@@ -160,26 +208,13 @@ def game_loop():
                     if not isinstance(sprite, Floor) and not isinstance(sprite, Player):
                         sprite.inc_speed()
 
-            if event.type == REDRAW:
-
-                # spawn end after 90 seconds
-                if isEnd:
-                    x = -1
-                    change_coins(coins, x)
-                    change_platforms(platforms, x)
-                    change_bugs(bugs, x)
-                    end_spawn.add(end)
-                    sprites.add(end)
-                if not isEnd:
-                    x = random.randint(0,5)
-                    change_coins(coins, x)
-                    change_platforms(platforms, x)
-                    change_bugs(bugs, x)
+                
             if event.type == SLOWDOWN:
                 background.slowdown()
                 for sprite in sprites:
                     if not isinstance(sprite, Floor) and not isinstance(sprite, Player):
                         sprite.slowdown()
+
             if event.type == WIN:
                 screen.fill((0,255,0))
                 pygame.display.update()
@@ -189,6 +224,9 @@ def game_loop():
         # draw the background to the screen (NOTE: background is not included in sprite since the background is NOT a sprite)
         background.update()
         background.draw(screen)
+
+        # draw tiles
+       # level.draw(screen)
 
 
         # update positions of sprites + draw them onto the screen
@@ -241,18 +279,21 @@ def game_loop():
         seconds = (counter/1000) % 60 # timer for ui
         seconds = int(seconds)
 
-        show_ui(screen, "Game Time: " + ("%d" % (seconds)), 490, 75)
+        show_ui(screen, "Game Time: " + ("%d" % (seconds)), 510, 75)
 
-        score = (0.5 * player.Coins) + ( 0.05 * seconds) - ( 0.4 * player.HP)
+        # score = (0.5 * player.total_coins) + ( 0.05 * seconds) - ( 0.4 * player.HP)
+        score = (1 * player.total_coins) + ( 0.4 * player.HP) + ( 0.05 * seconds)
         score = round(score, 2)
+        score = score + 10 * player.Lives
         if score <= 0:
             score = 0
         player.Score = score
 
 
-        show_coins(screen, "Coins : " + str(player.Coins))
+        show_ui(screen, "Coins : " + str(player.Coins), 100, 15)
         show_ui(screen, "Health : " + str(player.HP), 540, 20)
-        show_ui(screen, "Score : " + str(score), 90, 60)
+        show_ui(screen, "Score : " + str(score), 100, 60)
+        
         # update the display
         pygame.display.update()
         FramePerSec.tick(FPS)
@@ -260,9 +301,18 @@ def game_loop():
 
 # Game Loop
 def main():
+    running = True
     pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'music2.wav')))
-    game_intro(screen, screen_width, screen_height, FramePerSec, FPS)
-    game_loop()
+    while running:
+        current_level = game_intro(screen, screen_width, screen_height, FramePerSec, FPS)
+        gamevalues = gamecreation(current_level) # player, coins, platforms, obstacles, end_spawn, sprites
+        results = game_loop(gamevalues[0], gamevalues[1], gamevalues[2], gamevalues[3], gamevalues[4], gamevalues[5], current_level)
+        while results[1]:
+            gamevalues = gamecreation(current_level)
+            gamevalues[0] = results[0]
+            results = game_loop(gamevalues[0], gamevalues[1], gamevalues[2], gamevalues[3], gamevalues[4], gamevalues[5], current_level)
+    return
+
 
 
 if __name__ == "__main__":
