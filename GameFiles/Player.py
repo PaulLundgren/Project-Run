@@ -1,5 +1,6 @@
 import pygame
 import os
+import sys
 from pygame.locals import *
 
 
@@ -14,7 +15,8 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
 
         # variables for the player sprite
-        self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'player.png')).convert_alpha()
+        #self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'player.png')).convert_alpha()
+        self.image = pygame.image.load(os.path.join(os.path.dirname(sys.executable), 'Lib', 'GameFiles', 'Images', 'player.png')).convert_alpha()
         self.image = pygame.transform.scale(self.image, (85, 85)) # scale the image
         self.width = screen_width
         self.height = screen_height

@@ -1,13 +1,14 @@
 import pygame
 import os
+import sys
 class Boss(pygame.sprite.Sprite):
     """Represents a type of obstacle that the player must avoid. Slows the player down when collision occurs."""
 
     def __init__(self, screen_height):
         super().__init__()
         #'Lib','GameFiles', for the installer
-        self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'bug.png')).convert_alpha()
-        #self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Lib', 'GameFiles', 'Images', 'bug.png')).convert_alpha()
+        #self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'bug.png')).convert_alpha()
+        self.image = pygame.image.load(os.path.join(os.path.dirname(sys.executable), 'Lib', 'GameFiles', 'Images', 'bug.png')).convert_alpha()
         self.image = pygame.transform.scale(self.image, (350, 350))
         self.surface = pygame.Surface((275, screen_height)) # set the image's surface
         self.surface.fill((0, 0, 0))

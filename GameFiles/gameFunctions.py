@@ -1,5 +1,6 @@
 import pygame
 import os
+import sys
 
 green = (0, 225, 0)
 black = (0, 0, 0)
@@ -16,10 +17,8 @@ def button(screen, message, x, y, w, h, default_color, active_color, action=None
         pygame.draw.rect(screen, active_color, (x, y, w, h))
         if click[0] == 1 and action != None:
             # play sound effect for hitting a button
-            # os.path.join(os.path.dirname(__file__), 'Images', 'click.wav')
-            #pygame.mixer.Sound.play(pygame.mixer.Sound("click.wav"))
-            #pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Lib', 'GameFiles', 'Images', 'click.wav')))
-            pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'click.wav')))
+            pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(sys.executable), 'Lib', 'GameFiles', 'Images', 'click.wav')))
+            #pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'click.wav')))
             pygame.mixer.music.stop()
             action()
     else:
@@ -48,8 +47,8 @@ def booleanButton (screen, message, x, y, w, h, default_color, active_color):
 
 def downButton (screen, message, x, y, w, h, default_color):
     pygame.draw.rect(screen, default_color, (x, y, w, h))
-    #pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Lib', 'GameFiles', 'Images', 'click.wav')))
-    pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'click.wav')))
+    pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(sys.executable), 'Lib', 'GameFiles', 'Images', 'click.wav')))
+    #pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'click.wav')))
     pygame.mixer.music.stop()
     button_text = pygame.font.Font("freesansbold.ttf",20)
     textSurf, textRect = text_objects(message, button_text)

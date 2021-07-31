@@ -1,5 +1,6 @@
 import pygame
 import os
+import sys
 class Currency(pygame.sprite.Sprite):
     """The currency of our game. The user can collect these objects to purchase items."""
     
@@ -29,7 +30,8 @@ class Currency(pygame.sprite.Sprite):
         """A method that removes coin sprites when collision occurs b/w player and coin sprite."""
         for coin in coins_hit:
             if not coin.touched:
-                pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'coin.wav')))
+                pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(sys.executable), 'Lib', 'GameFiles', 'Images', 'coin.wav')))
+                #pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'coin.wav')))
                 # pygame.mixer.Sound.play(pygame.mixer.Sound("coin.wav")) # play sound effect for hitting a coin
                 pygame.mixer.music.stop()
                 coin.touched = True

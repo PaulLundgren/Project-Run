@@ -38,4 +38,3 @@ setup(
                             shortcutDir="DesktopFolder",
                             icon="GameFiles/Images/icon.ico")]
 )
-

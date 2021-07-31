@@ -1,7 +1,7 @@
 import pygame
 import csv
 import os
-
+import sys
 
 pygame.init()
 
@@ -80,12 +80,16 @@ def gameedit():
 
         # image loading
 
-        background = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'background_image.jpg')).convert_alpha()
-        player = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'player.png')).convert_alpha()
+        #background = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'background_image.jpg')).convert_alpha()
+        #player = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'player.png')).convert_alpha()
+        background = pygame.image.load(os.path.join(os.path.dirname(sys.executable), 'Lib', 'GameFiles', 'Images', 'background_image.jpg')).convert_alpha()
+        player = pygame.image.load(os.path.join(os.path.dirname(sys.executable), 'Lib', 'GameFiles', 'Images', 'player.png')).convert_alpha()
         player = pygame.transform.scale(player, (TILE_SIZE, TILE_SIZE))
-        coin = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'coin.png')).convert_alpha()
+        #coin = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'coin.png')).convert_alpha()
+        coin = pygame.image.load(os.path.join(os.path.dirname(sys.executable), 'Lib', 'GameFiles', 'Images', 'coin.png')).convert_alpha()
         coin = pygame.transform.scale(coin, (TILE_SIZE, TILE_SIZE))
-        bug = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'bug.png')).convert_alpha()
+        #bug = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'bug.png')).convert_alpha()
+        bug = pygame.image.load(os.path.join(os.path.dirname(sys.executable), 'Lib', 'GameFiles', 'Images', 'bug.png')).convert_alpha()
         bug = pygame.transform.scale(bug, (TILE_SIZE, TILE_SIZE))
 
         # floor and platforms
@@ -174,7 +178,8 @@ def gameedit():
 
             # saving & load data for the level
             if save_button.draw():
-                 with open(f"level_{current_level}.csv", "w", newline='') as csv_file:
+                 #with open(f"level_{current_level}.csv", "w", newline='') as csv_file:
+                 with open(os.path.join(os.path.dirname(sys.executable), 'Lib', 'GameFiles', f'level_{current_level}.csv'), "w",  newline="") as csv_file:
                      writer = csv.writer(csv_file, delimiter = ',')
                      for row in level:
                          writer.writerow(row)
