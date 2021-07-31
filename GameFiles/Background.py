@@ -5,6 +5,8 @@ class Background():
     """The background for our game."""
 
     def __init__(self, screen_width, screen_height):
+        #'Lib','GameFiles', for the installer
+        #self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Lib', 'GameFiles', 'Images', 'background_image.jpg')).convert_alpha()
         self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'background_image.jpg')).convert_alpha()
         self.image = pygame.transform.scale(self.image, (screen_width, screen_height)) # scale the image
         self.rect = self.image.get_rect() # store a rectangle TODO: Resize the image to match the window size

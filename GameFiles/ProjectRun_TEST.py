@@ -54,9 +54,12 @@ bright_green = (0, 255, 0)
 
 def gamecreation(level):
     images = []
+    #'Lib','GameFiles', for the installer
     coin = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'coin.png')).convert_alpha()
+    #coin = pygame.image.load(os.path.join(os.path.dirname(__file__),'Lib','GameFiles', 'Images', 'coin.png')).convert_alpha()
     coin = pygame.transform.scale(coin, (TILE_SIZE, TILE_SIZE))
     bug = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'bug.png')).convert_alpha()
+    #bug = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Lib', 'GameFiles', 'Images', 'bug.png')).convert_alpha()
     bug = pygame.transform.scale(bug, (TILE_SIZE, TILE_SIZE))
     floor = pygame.Surface((TILE_SIZE, TILE_SIZE))
     floor.fill((255,0,0))
@@ -88,8 +91,9 @@ def gamecreation(level):
     for row in range(ROWS):
         row = [-1] * COLS
         tiles.append(row)
-
-    with open(f"level_{current_level}.csv", newline="") as csv_file:
+ #os.path.join(os.path.dirname(__file__), 'Images', 'music2.wav')
+    with open(os.path.join(os.path.dirname(__file__),  f'level_{current_level}.csv'),  newline="") as csv_file:
+    #with open(os.path.join(os.path.dirname(__file__), 'Lib', 'GameFiles', f'level_{current_level}.csv'),  newline="") as csv_file:
         reader = csv.reader(csv_file, delimiter = ',')
         for x, row in enumerate(reader):
             for y, tile in enumerate(row):
@@ -328,6 +332,7 @@ def game_loop(player, coins, platforms, obstacles, end_spawn, sprites, boss_spaw
 def main():
     running = True
     pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'music2.wav')), -1)
+    #pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Lib', 'GameFiles', 'Images', 'music2.wav')), -1)
     while running == True :
         # pygame.mixer.Sound.play(pygame.mixer.Sound(os.path.join(os.path.dirname(__file__), 'Images', 'music2.wav')))
         current_level = game_intro(screen, screen_width, screen_height, FramePerSec, FPS)
@@ -335,7 +340,7 @@ def main():
         results = game_loop(gamevalues[0], gamevalues[1], gamevalues[2], gamevalues[3], gamevalues[4], gamevalues[5], gamevalues[6], current_level)
         while results[1]:
             gamevalues = gamecreation(current_level)
-            gamevalues[0] = results[0]
+            gamevalues[0].Lives = results[0].Lives
             results = game_loop(gamevalues[0], gamevalues[1], gamevalues[2], gamevalues[3], gamevalues[4], gamevalues[5], gamevalues[6], current_level)
 
 

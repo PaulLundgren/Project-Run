@@ -92,8 +92,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.midbottom = self.position # update the lower boundary of the player's rectangle; neccesary for collision with platforms
 
     def playerDeath(self):
-        self.rect = self.surface.get_rect(center = (260, 430)) # set where the player spawns + it's coordinates relative to the screen
-
+        self.rect.x = 260
+        self.rect.y = 430
     def hit(self, hits_list):
         """Detects if the player is in collision with a platform sprite."""
 
@@ -104,10 +104,6 @@ class Player(pygame.sprite.Sprite):
             
                 # player is standing or falling
                 if self.velocity.y >= 0:
-                    print("object")
-                    print(hits_list[0].rect.top)
-                    print("player")
-                    print(self.position.y)
                     # repositions the player sprite onto the top of the platform
                     if self.position.y < hits_list[0].rect.bottom:
                         self.acceleration.y = 0
