@@ -2,6 +2,7 @@ import pygame
 import sys
 from GameFiles.gameFunctions import *
 from GameFiles.LevelEditor import *
+from GameFiles.gamehelp import gamehelp
 #from GameFiles.ProjectRun import *
 white = (255, 255, 255)
 yellow = (255, 255, 0)
@@ -15,6 +16,13 @@ dark_yellow = (200,200,0)
 intro = True
 level = False
 level_value = 0
+global shopscreen
+global shopwidth
+global shopheight
+global shopFPS
+global shopSPF
+global shopPlayer
+
 def unpause():
     global intro
     intro = False
@@ -50,10 +58,24 @@ def level_three():
 def exitmenu():
     global level
     level = False
+
+def game_help():
+    gamehelp(shopscreen, shopwidth, shopheight, shopFPS, shopSPF)
+
 def leveleditting():
     gameedit()
 
 def game_intro(screen, screen_width, screen_height, FramePerSec, FPS):
+    global shopscreen
+    shopscreen = screen
+    global shopwidth
+    shopwidth = screen_width
+    global shopheight
+    shopheight = screen_height
+    global shopFPS
+    shopFPS = FramePerSec
+    global shopSPF
+    shopSPF = FPS
     screen.fill(white)
     largeText = pygame.font.Font('freesansbold.ttf', 80)
     TitleSurf, TitleRect = text_objects("Project Run", largeText)
@@ -87,6 +109,7 @@ def game_intro(screen, screen_width, screen_height, FramePerSec, FPS):
         # x-cord + rect.width > mouse pos x > x-cord and y-cord + rect.height > mouse pos y > y-cord
             button(screen, "Start", start_x, start_y, start_w, start_h, green, bright_green, level_select)
             button(screen, "Quit", exit_x, exit_y, exit_w, exit_h, red, bright_red, game_quit)
+            button(screen, "Help", exit_x + 100, exit_y, exit_w, exit_h, dark_yellow, yellow, game_help)
             pygame.display.update()
         FramePerSec.tick(FPS)
         while(level):
