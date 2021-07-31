@@ -20,6 +20,12 @@ To pip install:
 3. Then do: start_ProjectRun , game should start
 4. Enjoy!
 
+
+
+To build the installer with cx_Freeze:
+
+run "python setup_cx.py build bdist_msi"
+
 Controls:
 
 ESC: Pause Menu
