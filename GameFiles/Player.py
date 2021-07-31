@@ -85,9 +85,11 @@ class Player(pygame.sprite.Sprite):
             self.position.x = self.width - 40
         
         if self.position.x <= 0:
+            self.HP = 0
             self.position.x = 0
 
-        if self.position.y <= 50:
+        if self.position.y <= 0:
+            self.HP = 0
             self.position.y = 100
             self.velocity.y = 0
 

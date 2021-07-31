@@ -191,7 +191,8 @@ def gameedit():
                 screen = pygame.display.set_mode((screen_width, screen_height))
                 return
             draw_text(f"BACK", font, BLACK, screen_width // 4 - 40, screen_height + boundary - 37)
-
+            draw_text(f"Left click to place", font, BLACK, screen_width // 4 - 50, screen_height + boundary - 70)
+            draw_text(f"Right click to remove", font, BLACK, screen_width // 2 + 50, screen_height + boundary - 70)
             count = 0
             for count, i in enumerate(tile_list):
                 if i.draw():
@@ -233,6 +234,7 @@ def gameedit():
 
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                    sys.exit()
 
 
 

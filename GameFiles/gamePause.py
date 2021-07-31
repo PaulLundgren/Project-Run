@@ -72,7 +72,7 @@ def game_pause(screen, screen_width, screen_height, FramePerSec, FPS, player):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+                sys.exit()
         # x-cord + rect.width > mouse pos x > x-cord and y-cord + rect.height > mouse pos y > y-cord
         button(screen, "Continue", start_x - 25, start_y, w, h, green, bright_green, unpause)
         button(screen, "Quit", exit_x + 25, exit_y, w, h, red, bright_red, game_quit)

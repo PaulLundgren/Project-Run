@@ -10,7 +10,7 @@ class Background():
         self.image = pygame.image.load(os.path.join(os.path.dirname(sys.executable), 'Lib', 'GameFiles', 'Images', 'background_image.jpg')).convert_alpha()
         #self.image = pygame.image.load(os.path.join(os.path.dirname(__file__), 'Images', 'background_image.jpg')).convert_alpha()
         self.image = pygame.transform.scale(self.image, (screen_width, screen_height)) # scale the image
-        self.rect = self.image.get_rect() # store a rectangle TODO: Resize the image to match the window size
+        self.rect = self.image.get_rect() # store a rectangle
 
         # 1st set of coordinates
         self.x1 = 0

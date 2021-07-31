@@ -83,7 +83,7 @@ def game_intro(screen, screen_width, screen_height, FramePerSec, FPS):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+                sys.exit()
         # x-cord + rect.width > mouse pos x > x-cord and y-cord + rect.height > mouse pos y > y-cord
             button(screen, "Start", start_x, start_y, start_w, start_h, green, bright_green, level_select)
             button(screen, "Quit", exit_x, exit_y, exit_w, exit_h, red, bright_red, game_quit)
@@ -98,7 +98,7 @@ def game_intro(screen, screen_width, screen_height, FramePerSec, FPS):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    quit()
+                    sys.exit()
                 button(screen, "level 1", 50 + start_x/2, start_y - 150, start_w, start_h, green, bright_green, level_one)
                 button(screen, "level 2", 50 + start_x + start_x/2 , start_y - 150, start_w, start_h, green, bright_green, level_two)
                 button(screen, "level 3", 50 + start_x * 2 + start_x/2, start_y - 150, start_w, start_h, green, bright_green, level_three)
