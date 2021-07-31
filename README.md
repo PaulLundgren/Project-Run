@@ -28,10 +28,10 @@ run "python setup_cx.py build bdist_msi"
 
 Controls:
 
-ESC: Pause Menu
-
-P: Shop Menu
+ESC: Pause Menu and Shop Menu in game
 
 A and D: for left and right movement respectivly
+
+S: To go down faster
 
 SPACE: To jump
