@@ -25,6 +25,8 @@ global shopPlayer
 def unpause():
     global pause
     pause = False
+    global exitgame
+    exitgame = False
 
 def game_quit():
     global pause
